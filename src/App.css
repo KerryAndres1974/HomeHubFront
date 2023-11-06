@@ -1,0 +1,12 @@
+* { 
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    font-size: 18px;
+    background-image: url(./imagenes/imagen-pagina.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}

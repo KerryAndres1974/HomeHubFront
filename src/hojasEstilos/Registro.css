@@ -1,0 +1,82 @@
+#principal-registro{
+    height: 100vh;
+    display: grid;
+    place-items: center;
+}
+
+#contenedor-registro{
+    width: 800px;
+    height: 480px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    background-color: #99c9ff38;
+    backdrop-filter: blur(5px);
+    border-radius: 20px 0 20px 0;
+    box-shadow: 0 3px 13px 1px rgb(0 0 0 / 9%);
+}
+
+#titulo-registro{
+    margin: 15px 0 20px 0;
+    font-size: 1.3rem;
+}
+
+#btn-registro{
+    font-family: Roboto, sans-serif;
+    margin: 20px 0 18px 0;
+    font-size: 18px;
+    padding: 14px 32px;
+    background: blue;
+    color: white;
+    border-radius: 15px;
+    cursor: pointer;
+    text-align: center;
+    width: 250px;
+}
+
+#contenedor-inputs{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 5px;
+}
+
+#contenedor-final2{
+    width: 30%;
+    margin-top: 5px;
+}
+
+nav{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#pregunta-login{
+    margin-top: 2px;
+    font-size: 0.8rem;
+}
+
+nav ul{
+    display: flex;
+    &nav ul li{
+        list-style: none;
+    }
+}
+
+#pestaña2{
+    font-size: 0.8rem;
+    color: blue;
+}
+
+#mensajeError{
+    height: 45px;
+    background: #f66060;
+    padding: 0 15px;
+}
+
+#terminos{
+    font-size: 0.8rem;
+    margin-left: 2px;
+    margin-top: 8px;
+}
