@@ -5,7 +5,9 @@ function Home() {
   return (
     <div>
       <Encabezado />
-      <h1>Pagina de Inicio</h1>
+        <div className='InicioLobby'>
+          <h1>Pagina de Inicio</h1>
+        </div>  
     </div>
   );
 }
