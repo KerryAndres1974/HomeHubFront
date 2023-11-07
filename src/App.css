@@ -23,13 +23,16 @@ h1 {
 }
 
 .InicioLobby {
-    
-    min-height: 100vh;
+
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
+    align-items: top;
     justify-content: center;
     text-align: center;
 
+}
+
+.navegador {
+    background-color: rgba(15, 92, 15, 0.753);
 }
 

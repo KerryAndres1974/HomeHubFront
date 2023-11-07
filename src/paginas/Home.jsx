@@ -6,7 +6,7 @@ function Home() {
     <div>
       <Encabezado />
         <div className='InicioLobby'>
-          <h1>Pagina de Inicio</h1>
+          <h1>Bienvenido</h1>
         </div>  
     </div>
   );
