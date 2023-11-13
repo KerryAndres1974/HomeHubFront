@@ -1,0 +1,42 @@
+#formulario{
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+}
+
+#texto-input{
+    font-size: 0.8rem;
+    margin: 10px 0 0 30px;
+    &.error{
+        color: red;
+    }
+}
+
+#input{
+    border: 2px solid transparent;
+    padding: 12px;
+    transition: all 0.5s ease;
+    background: #f5f6f7;
+    border-radius: 8px;
+    font-size: 18px;
+    outline: none;
+    width: 320px;
+    margin: auto;
+
+    &:focus{
+        border: 2px solid blue;
+    }
+    &.error{
+        border: 2px solid red !important;
+    }
+}
+
+#leyendaError{
+    font-size: 0.7rem;
+    margin-left: 30px;
+    display: none;
+    color: #f66060;
+    &.error{
+        display: block;
+    }
+}
