@@ -7,7 +7,6 @@ export function App() {
       <Encabezado />
       <h1>Pagina de Home</h1>
     </div>
-
   );
 }
 
