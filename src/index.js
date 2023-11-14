@@ -1,14 +1,43 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
+import Recuperar from './paginas/Recuperar.jsx';
+import Servicios from './paginas/Servicios.jsx';
+import Registro from './paginas/Registro.jsx';
+import Nosotros from './paginas/Nosotros.jsx';
+import Ingreso from './paginas/Ingreso.jsx';
 import App from './App';
-import { BrowserRouter } from 'react-router-dom';
+import './index.css';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <App />,
+  },
+  {
+    path: '/Nosotros',
+    element: <Nosotros />,
+  },
+  {
+    path: '/Servicios',
+    element: <Servicios />,
+  },
+  {
+    path: '/Ingreso',
+    element: <Ingreso />,
+  },
+  {
+    path: '/Registro',
+    element: <Registro />,
+  },
+  {
+    path: '/Recuperar',
+    element: <Recuperar />,
+  },
+]);
+
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <RouterProvider router={router} />
   </React.StrictMode>
 );

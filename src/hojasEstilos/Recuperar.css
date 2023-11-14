@@ -1,10 +1,10 @@
-#principal-login{
+#principal-recup{
     height: 100vh;
     display: grid;
     place-items: center;
 }
 
-#contenedor-login{
+#contenedor-recup{
     width: 400px;
     height: auto;
     overflow: hidden;
@@ -19,7 +19,7 @@
     box-shadow: 0 3px 13px 1px rgb(0 0 0 / 9%);
 }
 
-#texto-login{
+#texto-recup{
     margin: 15px 0 25px 0;
     font-size: 1.3rem;
 }
@@ -29,7 +29,7 @@
     margin: 10px 0 0 30px;
 }
 
-#user-input1{
+#user-input{
     border: 2px solid transparent;
     padding: 12px;
     transition: all 0.5s ease;
@@ -45,23 +45,13 @@
     }
 }
 
-#user-input2{
-    border: 2px solid transparent;
-    padding: 12px;
-    transition: all 0.5s ease;
-    background: #f5f6f7;
-    border-radius: 8px;
-    font-size: 18px;
-    outline: none;
-    width: 320px;
-    margin-left: 26px;
-
-    &:focus{
-        border: 2px solid blue;
-    }
+#mensaje-Error{
+    height: 26px;
+    background: #f66060;
+    padding: 0 15px;
 }
 
-#btn-login{
+#btn-recup{
     font-family: Roboto, sans-serif;
     margin: 28px 0 25px 0;
     font-size: 18px;
@@ -72,12 +62,6 @@
     cursor: pointer;
     text-align: center;
     width: 250px;
-}
-
-#mensaje-Error{
-    height: 26px;
-    background: #f66060;
-    padding: 0 15px;
 }
 
 #contenerdor-rutas{
@@ -99,9 +83,7 @@ nav ul li{
     list-style: none;
 }
 
-#window1{
+#window2{
     font-size: 0.8rem;
     color: blue;
-    margin-right: 30px;
-    margin-top: 20px;
 }

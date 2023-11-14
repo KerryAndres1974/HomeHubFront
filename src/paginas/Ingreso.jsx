@@ -1,34 +1,49 @@
-import Inputs from '../componentes/Inputs.jsx';
 import { Link } from 'react-router-dom';
 import '../hojasEstilos/Ingreso.css';
 import { useState } from 'react';
 
 function Ingreso() {
+    const [formularioValido, cambiarFormulario] = useState(null);
 
-    const [usuario, cambiarUsuario] = useState({campo: '', valido: null});
-    const [contras, cambiarContras] = useState({campo: '', valido: null});
+    const onSubmits = (e) => {
+        e.preventDefault();
+        
+        let usuario = document.getElementById('user-input1').value;
+        let contras = document.getElementById('user-input2').value;
+
+        if(usuario !== '' && contras !== ''){
+            let datos = {user: usuario, password: contras};     
+            let datosJSON = JSON.stringify(datos);
+            console.log(datosJSON)
+            /*fetch('http://localhost:5000/transaccion', {
+                method: 'Post',
+                body: datosJSON
+            })*/
+            cambiarFormulario(true);
+        } else {
+            console.log("los campos estan vacios")
+            cambiarFormulario(false);
+        }
+    }
 
     return(
         <div id='principal-login'>
-            <div id='contenedor-login'>
+            <form id='contenedor-login' onSubmit={onSubmits}>
                 <p id='texto-login'>Inicia sesión</p>
 
-                <Inputs 
-                    tipo='text'
-                    texto='Telefono, e-mail o usuario'
-                    estado={usuario}
-                    error='Debe ser un telefono valido'
-                    cambiarEstado={cambiarUsuario}
-                />
-                <Inputs 
-                    tipo='password'
-                    texto='Contraseña'
-                    estado={contras}
-                    error='Debe ser un telefono valido'
-                    cambiarEstado={cambiarContras}
-                />
+                <div>
+                    <label id='input-text'>Telefono, e-mail o usuario</label>
+                    <input id='user-input1' type='texto'></input>
+
+                    <label id='input-text'>Contraseña</label>
+                    <input id='user-input2' type='password'></input>
+                </div>
                 
-                <form><input id='btn-login' type='submit' value='Continuar' /></form>
+                <input id='btn-login' type='submit' value='Continuar' />
+
+                {formularioValido === false && <div id='mensaje-Error'>
+                    <p><b>Error: </b>Usuario y/o contraseña invalidos</p>
+                </div>}
 
                 <div id='contenedor-rutas'>
                     <nav>
@@ -38,7 +53,7 @@ function Ingreso() {
                         </ul>
                     </nav>
                 </div>
-            </div>
+            </form>
         </div>
     );
 }

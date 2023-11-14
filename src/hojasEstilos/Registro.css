@@ -6,7 +6,9 @@
 
 #contenedor-registro{
     width: 800px;
-    height: 480px;
+    height: auto;
+    overflow: hidden;
+    transition: height 0.5s ease;
     padding: 14px;
     display: flex;
     align-items: center;
@@ -70,7 +72,7 @@ nav ul{
 }
 
 #mensajeError{
-    height: 45px;
+    height: 26px;
     background: #f66060;
     padding: 0 15px;
 }
