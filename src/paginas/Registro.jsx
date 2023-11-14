@@ -137,7 +137,14 @@ function Registro() {
                     Acepto los Terminos y Condiciones
                 </label>
 
-                <div><button id='btn-registro' type='submit'>Continuar</button></div>
+                <div>
+
+                    <Link to="/CompletarRegistro"><button id='btn-registro' type='submit'>Continuar</button></Link>
+
+                    
+                            {/* Esto hace de el botón un enlace pero no lo valida, está así mientras pruebo la página del perfil*/}
+
+                    </div>
                 
                 {formularioValido === false && <div id='mensajeError'>
                     <p><b>Error: </b>Por favor completa el formulario correctamente</p>
