@@ -63,7 +63,6 @@ function Recuperar() {
                 password2: rcontra.campo,};
         
             let datosJSON = JSON.stringify(datos);
-            console.log(datosJSON)
             fetch('http://localhost:5000/transaccion', {
                 method: 'Post',
                 body: datosJSON,
