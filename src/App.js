@@ -3,9 +3,9 @@ import './App.css';
 
 export function App() {
   return (
-    <div>
+    <div className= 'Página de Home'>
       <Encabezado />
-      <h1>Pagina de Home</h1>
+      <h1>Bienvenido</h1>
     </div>
   );
 }

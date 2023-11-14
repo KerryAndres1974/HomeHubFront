@@ -8,7 +8,7 @@ header {
     padding: 25px;
     display: flex;
     align-items: center;
-    background-color: #fff;
+    background-color: #f5f6f7;
 }
 
 .contenedor{
@@ -21,6 +21,7 @@ header {
     font-weight: 100;
     margin-top: 3px;
     margin-right: 30px;
+    justify-content: center;
 }
 
 .menu{
@@ -42,6 +43,6 @@ header {
 .pestaña:hover{
     padding: 5px 10px;
     background: #000;
-    color: #fff;
+    color: #f5f6f7;
     border-radius: 15px;
 }
