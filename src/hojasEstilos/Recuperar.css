@@ -29,7 +29,7 @@
     margin: 10px 0 0 30px;
 }
 
-#user-input{
+#correo{
     border: 2px solid transparent;
     padding: 12px;
     transition: all 0.5s ease;
@@ -46,14 +46,22 @@
 }
 
 #mensaje-Error{
-    height: 26px;
     background: #f66060;
+    font-size: 17px;
     padding: 0 15px;
+    height: 26px;
+}
+
+#mensaje-Exito{
+    background: #60f680;
+    font-size: 17px;
+    padding: 0 15px;
+    height: 26px;
 }
 
 #btn-recup{
     font-family: Roboto, sans-serif;
-    margin: 28px 0 25px 0;
+    margin: 28px 0 18px 0;
     font-size: 18px;
     padding: 14px 32px;
     background: blue;
@@ -86,4 +94,9 @@ nav ul li{
 #window2{
     font-size: 0.8rem;
     color: blue;
+}
+
+#mensaje{
+    margin: 10px 27px;
+    font-size: 1rem;
 }

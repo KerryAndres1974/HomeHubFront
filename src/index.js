@@ -5,9 +5,12 @@ import Servicios from './paginas/Servicios.jsx';
 import Registro from './paginas/Registro.jsx';
 import Nosotros from './paginas/Nosotros.jsx';
 import Ingreso from './paginas/Ingreso.jsx';
+import Miperfil from './paginas/Miperfil.jsx';
+import RutaProtegida from './RutasProtegidas.js';
 import App from './App';
 import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { AuthProvider } from './Auth/AuthProvider.jsx';
 
 const router = createBrowserRouter([
   {
@@ -34,10 +37,22 @@ const router = createBrowserRouter([
     path: '/Recuperar',
     element: <Recuperar />,
   },
+  {
+    path: '/',
+    element: <RutaProtegida />,
+    children: [
+      {
+        path: '/Miperfil',
+        element: <Miperfil />,
+      },
+    ]
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>
 );
