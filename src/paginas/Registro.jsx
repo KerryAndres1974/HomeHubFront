@@ -167,13 +167,13 @@ function Registro() {
 
                 <div>
 
-                    <Link to="ConRegistro"><button id='btn-registro' type='submit'>Continuar</button></Link>
+                    <button id='btn-registro' type='submit'>Continuar</button>
                     
-                    {/* */}
-                    
-                            {/* Esto hace de el botón un enlace pero no lo valida, está así mientras pruebo la página del perfil*/}
-
                     </div>
+                <label id='pruebaconfir'>
+                    <Link to='/Registro/ConRegistro'>PruebaContinuar</Link>
+                    {/*link para probar la página de confirmación de perfil */}
+                </label>
                 
                 {formularioValido === false && <div id='mensajeError'>
                     <p><b>Error: </b>Por favor completa el formulario correctamente</p>
