@@ -1,10 +1,10 @@
 import Inputs from '../componentes/Inputs.jsx';
-import { Link } from 'react-router-dom';
+import { useAuth } from '../Auth/AuthProvider.jsx';
+import { Link, Navigate } from 'react-router-dom';
 import '../hojasEstilos/Registro.css';
 import { useState } from 'react';
 
 function Registro() {      
-
     const [usuario, cambiarUsuario] = useState({campo: '', valido: null});
     const [nombre, cambiarNombre] = useState({campo: '', valido: null});
     const [contraseña, cambiarContraseña] = useState({campo: '', valido: null});
@@ -13,6 +13,12 @@ function Registro() {
     const [telefono, cambiarTelefono] = useState({campo: '', valido: null});
     const [terminos, cambiarTerminos] = useState(false);
     const [formularioValido, cambiarFormulario] = useState(null);
+    const [variable, cambiarVariable] = useState(null);
+    const auth = useAuth();
+
+    if(auth.Estalogeado){
+        return <Navigate to='/Miperfil' />
+    }
 
     const expresiones = {
         usuario: /^[a-zA-Z0-9_-]{4,16}$/, //letras, numeros, guion y guion bajo
@@ -56,11 +62,33 @@ function Registro() {
             let datosJSON = JSON.stringify(datos);
             fetch('http://localhost:5000/transaccion', {
                 method: 'Post',
-                body: datosJSON
+                body: datosJSON,
             })
-            //recojo todos los datos y los mandare al backend
-            
-            cambiarFormulario(true);
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+                }
+                return response.json(); // Suponiendo que el servidor responde con JSON
+            })
+            .then(data => {
+                // Manejar la respuesta exitosa aquí
+                //recojo todos los datos y los mando al backend
+                cambiarFormulario(true);
+                console.log('Respuesta exitosa:', data);
+                cambiarUsuario({campo:'',valido: 'null'})
+                cambiarContraseña({campo:'',valido: 'null'})
+                cambiarContraseña2({campo:'',valido: 'null'})
+                cambiarCorreo({campo:'',valido: 'null'})
+                cambiarTelefono({campo:'',valido: 'null'})
+                cambiarNombre({campo:'',valido: 'null'})
+            })
+            .catch(error => {
+                // Manejar errores de la solicitud aquí
+                console.error('Error en la solicitud:', error);
+                cambiarFormulario(true)
+                cambiarVariable(false)
+            });
+
         } else {
             cambiarFormulario(false);
         }
@@ -149,6 +177,10 @@ function Registro() {
                 
                 {formularioValido === false && <div id='mensajeError'>
                     <p><b>Error: </b>Por favor completa el formulario correctamente</p>
+                </div>}
+
+                {variable === false && <div id='mensajeError'>
+                    <p><b>Error: </b>Esta dirección de correo electrónico ya está en uso</p>
                 </div>}
 
                 <div id='contenedor-final2'>

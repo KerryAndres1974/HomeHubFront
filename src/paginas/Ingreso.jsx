@@ -1,18 +1,23 @@
-import { Link } from 'react-router-dom';
+import { useAuth } from '../Auth/AuthProvider.jsx';
+import { Link, Navigate } from 'react-router-dom';
 import '../hojasEstilos/Ingreso.css';
 import { useState } from 'react';
 
 function Ingreso() {
     const [formularioValido, cambiarFormulario] = useState(null);
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const auth = useAuth();
 
+    if(auth.Estalogeado){
+        return <Navigate to='/Miperfil' />
+    }
+ 
     const onSubmits = (e) => {
         e.preventDefault();
-        
-        let usuario = document.getElementById('user-input1').value;
-        let contras = document.getElementById('user-input2').value;
 
-        if(usuario !== '' && contras !== ''){
-            let datos = {user: usuario, password: contras};     
+        if(username !== '' && password !== ''){
+            let datos = {user: username, pass: password};     
             let datosJSON = JSON.stringify(datos);
             console.log(datosJSON)
             /*fetch('http://localhost:5000/transaccion', {
@@ -33,10 +38,20 @@ function Ingreso() {
 
                 <div>
                     <label id='input-text'>Telefono, e-mail o usuario</label>
-                    <input id='user-input1' type='texto'></input>
+                    <input 
+                        id='usuario' 
+                        type='texto'
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                    ></input>
 
                     <label id='input-text'>Contraseña</label>
-                    <input id='user-input2' type='password'></input>
+                    <input 
+                        id='contraseña' 
+                        type='password'
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    ></input>
                 </div>
                 
                 <input id='btn-login' type='submit' value='Continuar' />
