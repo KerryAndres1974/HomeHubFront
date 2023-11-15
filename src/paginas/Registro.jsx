@@ -139,8 +139,9 @@ function Registro() {
 
                 <div>
 
-                    <Link to="/CompletarRegistro"><button id='btn-registro' type='submit'>Continuar</button></Link>
-
+                    <Link to="ConRegistro"><button id='btn-registro' type='submit'>Continuar</button></Link>
+                    {/*<Link to="/ConRegistro"><button id>xd</button></Link>
+                    {/* */}
                     
                             {/* Esto hace de el botón un enlace pero no lo valida, está así mientras pruebo la página del perfil*/}
 

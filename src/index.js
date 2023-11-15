@@ -8,6 +8,7 @@ import Ingreso from './paginas/Ingreso.jsx';
 import App from './App';
 import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import ConRegistro from './paginas/ConRegistro.jsx';
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
   {
     path: '/Recuperar',
     element: <Recuperar />,
+  },
+  {
+    path: '/Registro/ConRegistro',
+    element: <ConRegistro />,
   },
 ]);
 
