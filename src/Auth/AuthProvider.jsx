@@ -5,7 +5,7 @@ const AuthContext = createContext({
 });
 
 export function AuthProvider({ children }) {
-    const [Estalogeado, Logear] = useState(true);
+    const [Estalogeado, Logear] = useState(false);
     console.log(Logear)
 
     return(

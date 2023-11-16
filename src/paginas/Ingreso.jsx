@@ -1,5 +1,5 @@
-import { useAuth } from '../Auth/AuthProvider.jsx';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { useAuth } from '../Auth/AuthProvider.jsx';
 import '../hojasEstilos/Ingreso.css';
 import { useState } from 'react';
 
@@ -7,8 +7,8 @@ function Ingreso() {
     const [formularioValido, cambiarFormulario] = useState(null);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const auth = useAuth();
     const goTo = useNavigate();
+    const auth = useAuth();
 
     if(auth.Estalogeado){
         return <Navigate to='/Miperfil' />

@@ -14,8 +14,8 @@ function Registro() {
     const [terminos, cambiarTerminos] = useState(false);
     const [formularioValido, cambiarFormulario] = useState(null);
     const [variable, cambiarVariable] = useState(null);
-    const auth = useAuth();
     const goTo = useNavigate();
+    const auth = useAuth();
 
     if(auth.Estalogeado){
         return <Navigate to='/Miperfil' />
@@ -61,6 +61,7 @@ function Registro() {
                         phone: telefono.campo};
                 
             let datosJSON = JSON.stringify(datos);
+            
             fetch('http://localhost:8000/reg', {
                 method: 'POST',
                 body: datosJSON,
@@ -161,7 +162,7 @@ function Registro() {
                     />
                     Acepto los Terminos y Condiciones
                 </label>
-
+                
                 <div><button id='btn-registro' type='submit'>Continuar</button></div>
                 
                 {formularioValido === false && <div id='mensajeError'>

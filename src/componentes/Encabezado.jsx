@@ -3,7 +3,6 @@ import { Outlet, Link } from 'react-router-dom';
 import { useAuth } from '../Auth/AuthProvider.jsx';
 
 function Encabezado() {
-
     const auth = useAuth();
 
     const logeado = () => {
@@ -25,7 +24,7 @@ function Encabezado() {
                         <li><Link to="/Servicios" className='pestaña' >Servicios</Link></li>
                     </ul>
                 </div>
-
+                
                 {logeado() === false && <ul className='menu'>
                     <li><Link to="/Ingreso" className='pestaña' >Ingresar</Link></li>
                     <li><Link to="/Registro" className='pestaña' >Registrarse</Link></li>
@@ -34,7 +33,6 @@ function Encabezado() {
                 {logeado() === true && <ul className='menu'>
                     <li><Link to="/Miperfil" className='pestaña' >Mi perfil</Link></li>
                 </ul>}
-
             </nav>
         <Outlet />
     </header>;
