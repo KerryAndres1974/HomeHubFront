@@ -14,26 +14,25 @@ function Encabezado() {
     }
 
     return <header>
-            <nav className='navegador'>
+        <nav className='navegador'>
+            <div className='contenedor'>
+                <div className='titulo'>Home Hub</div>
+                <ul className='menu'>
+                    <li><Link to="/" className='pestaña' >Inicio</Link></li>
+                    <li><Link to="/Nosotros" className='pestaña' >Nosotros</Link></li>
+                    <li><Link to="/Servicios" className='pestaña' >Servicios</Link></li>
+                </ul>
+            </div>
+            
+            {logeado() === false && <ul className='menu'>
+                <li><Link to="/Ingreso" className='pestaña' >Ingresar</Link></li>
+                <li><Link to="/Registro" className='pestaña' >Registrarse</Link></li>
+            </ul>}
 
-                <div className='contenedor'>
-                    <div className='titulo'>Home Hub</div>
-                    <ul className='menu'>
-                        <li><Link to="/" className='pestaña' >Inicio</Link></li>
-                        <li><Link to="/Nosotros" className='pestaña' >Nosotros</Link></li>
-                        <li><Link to="/Servicios" className='pestaña' >Servicios</Link></li>
-                    </ul>
-                </div>
-                
-                {logeado() === false && <ul className='menu'>
-                    <li><Link to="/Ingreso" className='pestaña' >Ingresar</Link></li>
-                    <li><Link to="/Registro" className='pestaña' >Registrarse</Link></li>
-                </ul>}
-
-                {logeado() === true && <ul className='menu'>
-                    <li><Link to="/Miperfil" className='pestaña' >Mi perfil</Link></li>
-                </ul>}
-            </nav>
+            {logeado() === true && <ul className='menu'>
+                <li><Link to="/Miperfil" className='pestaña' >Mi perfil</Link></li>
+            </ul>}
+        </nav>
         <Outlet />
     </header>;
 }
