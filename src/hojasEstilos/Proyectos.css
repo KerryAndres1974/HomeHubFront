@@ -1,7 +1,6 @@
 .contenedor-propiedad {
     width: 360px;
     height: 500px;
-    margin: 45px 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -14,7 +13,7 @@
     }
 }
 
-.imagen-propiedad {
+.imagen {
     width: 100%;
     min-height: 240px;
     border-radius: 20px 20px 0 0;
@@ -22,24 +21,25 @@
 
 .contenedor-texto-propiedad {
     height: 100%;
-    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
     padding: 30px;
     font-family: Lato, sans-serif;
     font-weight: 400;
     font-size: 18px;
-}
 
-.titulo-propiedad {
-    font-size: 1.3rem;
-}
-
-.textos-propiedad {
-    margin-top: 30px;
-    font-size: 1.3rem;
-}
-
-.precio-propiedad {
-    margin-top: 40px;
-    font-size: 1.3rem;
-    text-align: center;
+    & .titulo-propiedad {
+        font-size: 1.3rem;
+    }
+    
+    & .textos-propiedad {
+        font-size: 1.3rem;
+    }
+    
+    & .precio-propiedad {
+        font-size: 1.3rem;
+        text-align: center;
+    }
 }

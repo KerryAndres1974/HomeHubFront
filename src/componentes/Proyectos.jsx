@@ -5,7 +5,7 @@ function Proyectos( props ) {
     return (
         <div className='contenedor-propiedad'>
             <img
-                className='imagen-propiedad' 
+                className='imagen' 
                 src={require(`../multimedia/${props.imagen}.jpg`)} 
                 alt='Foto propiedad' />
             <div className='contenedor-texto-propiedad'>

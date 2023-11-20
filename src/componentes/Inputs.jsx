@@ -26,15 +26,15 @@ const Inputs = ({ tipo, texto, error, expresionRegular, cambiarEstado, estado, f
     return (
         <div id='formulario'>
             <p id='texto-input' className={valido === false ? 'error' : ''}>{texto}</p>
-            <input id='input'
-                    type={tipo}
-                    value={estado.campo}
-                    onChange={onChange}
-                    onBlur={() => validarCampo()}
-                    onKeyUp={() => validarCampo()}
-                    className={valido === false ? 'error' : ''}
-                />
-            <p id='leyendaError' className={valido === false ? 'error' : ''}><b>{error}</b></p>
+            <input 
+                id='input'
+                type={tipo}
+                value={estado.campo}
+                onChange={onChange}
+                onBlur={() => validarCampo()}
+                onKeyUp={() => validarCampo()}
+                className={valido === false ? 'error' : ''} />
+            <p id='leyendaError' className={valido === false ? 'error' : ''}>{error}</p>
         </div>
     );
 }

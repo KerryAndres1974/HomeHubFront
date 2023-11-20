@@ -13,38 +13,36 @@ function Ingreso() {
     if(auth.Estalogeado){
         return <Navigate to='/Miperfil' />
     }
- 
-    const onSubmits = (e) => {
-        e.preventDefault();
 
-        if(username !== '' && password !== ''){
-            let datos = {user: username, pass: password};     
-            let datosJSON = JSON.stringify(datos);
-            
-            fetch('http://localhost:8000/login', {
-                method: 'POST',
-                body: datosJSON,
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-            })
-            .then(response => {
+    async function onSubmits(e) {
+        e.preventDefault();
+        
+        try {
+            if (username !== '' && password !== '') {
+                const response = await fetch('http://localhost:8000/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email: username, password: password }),
+                });
+
                 if (!response.ok) {
-                    throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+                    throw new Error('Usuario y/o contraseña invalidos');
                 }
-                return response.json(); // Suponiendo que el servidor responde con JSON
-            })
-            .then(data => {
-                // Manejar la respuesta exitosa aquí
-                goTo('/');
-            })
-            .catch(error => {
-                // Manejar errores de la solicitud aquí
-                console.error('Error en la solicitud:', error);
-                cambiarFormulario(true);
-            });
-        } else {
-            console.log("los campos estan vacios")
+
+                const { token } = await response.json();
+
+                // Manejar el token, por ejemplo, almacenarlo en el contexto de autenticación
+                // auth.login(token);
+                console.log('Token recibido:', token);
+                goTo('/')
+                auth.Estalogeado = true;
+            } else {
+                cambiarFormulario(false);
+            }
+        } catch (error) {
+            console.error('Error al iniciar sesión:', error);
             cambiarFormulario(false);
         }
     }

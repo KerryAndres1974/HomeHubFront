@@ -18,9 +18,9 @@
 
 .menu{
     display: flex;
-    li{
-    list-style: none;
-    margin-bottom: 10px;
+    .contPest{
+        list-style: none;
+        margin-bottom: 10px;
     }
 }
 
@@ -31,11 +31,10 @@
     transition: all 0.5s ease;
     font-size: 17px;
     margin: 10px;
-}
-
-.pestaña:hover{
-    padding: 5px 10px;
-    color: #2c3e50;
-    background: #f5f6f7;
-    border-radius: 15px;
+    &:hover{
+        padding: 5px 10px;
+        color: #2c3e50;
+        background: #f5f6f7;
+        border-radius: 15px;
+    }
 }

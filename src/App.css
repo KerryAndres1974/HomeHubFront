@@ -3,10 +3,17 @@
     padding: 0;
 }
 
-.linea {
-    width: 90%;
+.lineaH {
+    width: 95%;
     height: 1px;
     background: grey;
+}
+
+.lineaV {
+    width: 1px;
+    height: 80%;
+    background: grey;
+    margin-top: 10px;
 }
 
 video {
@@ -34,13 +41,13 @@ video {
     background: #f5f6f7;
 }
 
-h1{
+.textoBienvenida {
     font-size: 1.8em;
     font-family: Lato, sans-serif;
     text-align: center;
 }
 
-p{
+.textoApp{
     font-size: 1.2em;
     font-family: Lato, sans-serif;
     margin-top: 20px;
@@ -53,18 +60,43 @@ p{
     flex-direction: column;
     align-items: center;
     background: #f5f6f7;
+
+    & .textoProyectos{
+        font-size: 1.8em;
+        font-family: Lato, sans-serif;
+        text-align: center;
+        margin: 40px 0;
+    }
+
+    & .contenedorProyectos{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 70px;
+        padding: 60px 0;
+    }
 }
 
-h2{
-    font-size: 1.8em;
-    font-family: Lato, sans-serif;
-    text-align: center;
-    margin-top: 50px;
-    margin-bottom: 35px;
-}
+.piePagina {
+    height: 100px;
+    display: flex;
+    justify-content: space-around;
+    background: #2c3e50;
 
-.contenedorProyectos {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    column-gap: 70px;
+    & .contenedorPie{
+        width: 300px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+    }
+
+    & .textoPie{
+        color: #fff;
+        font-size: 20px;
+        justify-items: center;
+    }
+
+    & .rutaPie{
+        color: #fff;
+    }
 }

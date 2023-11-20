@@ -8,18 +8,20 @@ export function App() {
     <div className='Página-Home'>
       <Encabezado />
       <video src={videoBg} autoPlay loop muted />
+
       <section className='contenedorApertura'>
         <div className='contenedor1'>
-          <h1>¡Bienvenido a Home Hub!</h1>
-          <p>Hacemos realidad tus metas 
+          <h1 className='textoBienvenida'>¡Bienvenido a Home Hub!</h1>
+          <p className='textoApp'>Hacemos realidad tus metas 
           inmobiliarias con profesionalismo y dedicación. ¡Encuentra propiedades que se adaptan a tu 
           estilo de vida!</p>
         </div>
       </section>
+
       <section className='contenedorPropiedades'>
-        <p className='linea'></p>
-        <h2>Proyectos para tu Familia</h2>
-        <p className='linea'></p>
+        <br/><p className='lineaH'></p>
+        <h2 className='textoProyectos'>Proyectos para tu Familia</h2>
+        <p className='lineaH'></p>
         
         <div className='contenedorProyectos'>
           <Proyecto
@@ -66,6 +68,25 @@ export function App() {
           />
         </div>
       </section>
+
+      <footer className='piePagina'>
+        <div className='contenedorPie'>
+          <p className='textoPie'>Contactanos</p>
+          <p className='rutaPie'>HomeHub@gmail.com</p>
+        </div>
+        <div className='lineaV'></div>
+        <div className='contenedorPie'>
+          <p className='textoPie'>Encuentranos</p>
+          <p className='rutaPie'>Barrio Principe</p>
+        </div>
+        <div className='lineaV'></div>
+        <div className='contenedorPie'>
+          <p className='textoPie'>Siguenos En</p>
+          <p className='rutaPie'>Facebook</p>
+          <p className='rutaPie'>Instagram</p>
+          <p className='rutaPie'>Twitter</p>
+        </div>
+      </footer>
     </div>
   );
 }
