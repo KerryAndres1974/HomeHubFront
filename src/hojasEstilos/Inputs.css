@@ -1,19 +1,22 @@
-#formulario{
+/* Inputs.css */
+
+.formulario {
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
 }
 
-#texto-input{
+.texto-input {
     font-size: 0.8rem;
     margin: 10px 0 0 30px;
     color: #001f3f;
-    &.error{
-        color: red;
-    }
 }
 
-#input{
+.texto-input.error {
+    color: red;
+}
+
+.input {
     border: 2px solid transparent;
     padding: 12px;
     transition: all 0.5s ease;
@@ -27,17 +30,19 @@
     &:focus{
         border: 2px solid blue;
     }
-    &.error{
-        border: 2px solid red !important;
-    }
 }
 
-#leyendaError{
+.input.error{
+    border: 2px solid red;
+}
+
+.leyendaError {
     font-size: 0.7rem;
     margin-left: 30px;
     display: none;
     color: red;
-    &.error{
-        display: block;
-    }
+}
+
+.leyendaError.error {
+    display: block;
 }

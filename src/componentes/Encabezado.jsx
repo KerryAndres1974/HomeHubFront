@@ -31,9 +31,11 @@ function Encabezado() {
                 </ul>
             </div>}
             
-            {logeado() === true && <ul className='menu'>
-                <li><Link to="/Miperfil" className='pestaña' >Mi perfil</Link></li>
-            </ul>}
+            {logeado() === true && <div className='contenedor'>
+                <ul className='menu'>
+                    <li className='contPest'><Link to="/Miperfil" className='pestaña' >Mi perfil</Link></li>
+                </ul>
+            </div>}
         </nav>
         <Outlet />
     </header>;

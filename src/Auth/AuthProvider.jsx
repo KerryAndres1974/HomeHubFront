@@ -5,8 +5,8 @@ const AuthContext = createContext({
 });
 
 export function AuthProvider({ children }) {
-    const [Estalogeado, Logear] = useState(false);
-    console.log(Logear)
+    const [Estalogeado, Logear] = useState(true);
+    if(Logear){}
 
     return(
         <AuthContext.Provider value={{ Estalogeado }}>

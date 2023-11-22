@@ -1,6 +1,6 @@
 import { useAuth } from '../Auth/AuthProvider.jsx';
 import Inputs from '../componentes/Inputs.jsx';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import '../hojasEstilos/Recuperar.css';
 import { useState } from 'react';
 
@@ -9,20 +9,24 @@ function Recuperar() {
     const [contras, cambiarContras] = useState({campo: '', valido: null});
     const [rcontra, cambiarRcontra] = useState({campo: '', valido: null});
 
+    // Para mostrar errores y avanzar en los formularios
     const [formularioValido, cambiarFormulario] = useState(null);
     const [correoValido, cambiarCorreo] = useState(null);
     const [codigoValido, cambiarCodigo] = useState(null);
+    const [fase, setFase] = useState(1);
+
+    // Para verificar si los campos de correo y codigo estan vacios o no
     const [correo, setCorreo] = useState("");
     const [codigo, setCodigo] = useState("");
-    const [fase, setFase] = useState(1);
+    const goTo = useNavigate();
     const auth = useAuth();
 
     if(auth.Estalogeado){
         return <Navigate to='/Miperfil' />
     }
 
-    const expresiones = {
-        usuario: /^[a-zA-Z0-9_-]{4,16}$/, //letras, numeros, guion y guion bajo
+    const expresiones = { //letras, numeros, guion, guion bajo, @ y punto
+        usuario: /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$|^[a-zA-Z0-9_.-]+$|^[0-9]+$/,
         contraseña: /^.{4,12}$/, // de 4 a 12 digitos
     }
 
@@ -40,32 +44,12 @@ function Recuperar() {
         e.preventDefault();
 
         if(fase === 1 && correo !== ''){
-            console.log("correo aceptado");
-            cambiarCorreo(true);
-            setFase(2);
-        } else if (fase === 1 && correo === ''){
-            console.log("correo no aceptado");
-            cambiarCorreo(false);
-        } else if (fase === 2 && codigo !== ''){
-            console.log("codigo aceptado");
-            cambiarCodigo(true);
-            setFase(3);
-        } else if (fase === 2 && codigo === ''){
-            console.log("codigo no aceptado");
-            cambiarCodigo(false);
-            cambiarCorreo(null);
-        } else if (fase === 3 &&
-                usuario.valido === 'true' &&
-                contras.valido === 'true' &&
-                validarContraseña() === true){
-            let datos = {user: usuario.campo,
-                password: contras.campo,
-                password2: rcontra.campo,};
-        
-            let datosJSON = JSON.stringify(datos);
-            fetch('http://localhost:5000/transaccion', {
-                method: 'Post',
-                body: datosJSON,
+            fetch('http://localhost:8000/forgot-password', {
+                method: 'POST',
+                body: JSON.stringify({correo: correo}),
+                headers: {
+                    'Content-Type': 'application/json'
+                },
             })
             .then(response => {
                 if (!response.ok) {
@@ -74,22 +58,91 @@ function Recuperar() {
                 return response.json(); // Suponiendo que el servidor responde con JSON
             })
             .then(data => {
-                // Manejar la respuesta exitosa aquí
-                //recojo todos los datos y los mando al backend
-                cambiarFormulario(true);
-                console.log('Respuesta exitosa:', data);
-                cambiarUsuario({campo:'',valido: 'null'})
-                cambiarContras({campo:'',valido: 'null'})
-                cambiarRcontra({campo:'',valido: 'null'})
+                console.log("Envio correo exitoso");
+                cambiarCorreo(true);
+                setFase(2);
             })
             .catch(error => {
                 // Manejar errores de la solicitud aquí
                 console.error('Error en la solicitud:', error);
-                cambiarFormulario(true)
+                cambiarCorreo(false);
+            });
+
+        } else if (fase === 1 && correo === ''){
+
+            console.log("correo no aceptado");
+            cambiarCorreo(false);
+
+        } else if (fase === 2 && codigo !== ''){
+            fetch('http://localhost:8000/verify-code', {
+                method: 'POST',
+                body: JSON.stringify({correo: correo, codigo: codigo}),
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+                }
+                return response.json(); // Suponiendo que el servidor responde con JSON
+            })
+            .then(data => {
+                console.log("Envio codigo exitoso");
+                cambiarCodigo(true);
+                setFase(3);
+            })
+            .catch(error => {
+                // Manejar errores de la solicitud aquí
+                console.error('Error en la solicitud:', error);
+                cambiarCodigo(false);
+                cambiarCorreo(null);
+            });
+
+        } else if (fase === 2 && codigo === ''){
+
+            console.log("codigo no aceptado");
+            cambiarCodigo(false);
+            cambiarCorreo(null);
+
+        } else if (fase === 3 &&
+                usuario.valido === 'true' &&
+                contras.valido === 'true' &&
+                validarContraseña() === true){
+
+            let datos = {email: usuario.campo, password: contras.campo, correo: correo};
+            let datosJSON = JSON.stringify(datos);
+            console.log(datosJSON);
+
+            fetch('http://localhost:8000/reset-password', {
+                method: 'POST',
+                body: datosJSON,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Error en la solicitude: ${response.status} ${response.statusText}`);
+                }
+                return response.json(); // Suponiendo que el servidor responde con JSON
+            })
+            .then(data => {
+                // Manejar la respuesta exitosa aquí
+                console.log('Respuesta exitosa:', data);
+                cambiarFormulario(true);
+                cambiarCodigo(null);
+                goTo('/Ingreso');
+            })
+            .catch(error => {
+                // Manejar errores de la solicitud aquí
+                console.error('Error en la solicitud:', error);
+                cambiarCorreo(false);
+                cambiarCodigo(null);
             });
 
         } else {
-            cambiarFormulario(false)
+            cambiarFormulario(false);
         }
     }
 
@@ -149,7 +202,7 @@ function Recuperar() {
                         estado={usuario}
                         cambiarEstado={cambiarUsuario}
                         tipo='text'
-                        texto='Usuario'
+                        texto='Telefono, e-mail o usuario'
                         error='Campo invalido.'
                         expresionRegular={expresiones.usuario}
                         valido={usuario.valido}
@@ -176,10 +229,22 @@ function Recuperar() {
                     />
                 </div>
                 
-                <input id='btn-recup' type='submit' value='Enviar' />
+                <input id='btn-recup' type='submit' value='Ingresar' />
+
+                {codigoValido === true && <div id='mensaje-Exito'>
+                    <p>El codigo de verificacion fue aceptado</p>
+                </div>}
+
+                {correoValido === false && <div id='mensajeError'>
+                    <p>Usuario invalido</p>
+                </div>}
 
                 {formularioValido === false && <div id='mensajeError'>
                     <p><b>Error: </b>Completa el formulario</p>
+                </div>}
+
+                {formularioValido === true && <div id='mensaje-Exito' >
+                    <p>contraseña cambiada exitosamente</p>
                 </div>}
 
             </form>)}

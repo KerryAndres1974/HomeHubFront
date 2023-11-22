@@ -62,7 +62,7 @@ function Registro() {
                 
             let datosJSON = JSON.stringify(datos);
             
-            fetch('http://localhost:8000/reg', {
+            fetch('http://localhost:8000/register', {
                 method: 'POST',
                 body: datosJSON,
                 headers: {
@@ -163,7 +163,7 @@ function Registro() {
                     Acepto los Terminos y Condiciones
                 </label>
                 
-                <div><button id='btn-registro' type='submit'>Continuar</button></div>
+                <input className='btn-registro' type='submit' value='Publicar' />
                 
                 {formularioValido === false && <div id='mensajeError'>
                     <p><b>Error: </b>Por favor completa el formulario correctamente</p>

@@ -2,20 +2,16 @@ import '../hojasEstilos/Inputs.css';
 import { useState } from 'react';
 
 const Inputs = ({ tipo, texto, error, expresionRegular, cambiarEstado, estado, funcion }) => {
-    const [valido, setValido] = useState(null); // Inicialmente no se muestra ningún estado
+    const [valido, setValido] = useState(null);
 
     const validarCampo = () => {
         if (expresionRegular) {
-            if (expresionRegular.test(estado.campo)) {
-                cambiarEstado({...estado, valido: 'true'})
-                setValido(true);
-            } else {
-                cambiarEstado({...estado, valido: 'false'}) 
-                setValido(false);
-            }
+            const esValido = expresionRegular.test(estado.campo);
+            setValido(esValido);
+            cambiarEstado({...estado, valido: esValido.toString()});
         }
-        if(funcion){
-            setValido(funcion())
+        if (funcion) {
+            setValido(funcion());
         }
     }
 
@@ -24,17 +20,16 @@ const Inputs = ({ tipo, texto, error, expresionRegular, cambiarEstado, estado, f
     }
 
     return (
-        <div id='formulario'>
-            <p id='texto-input' className={valido === false ? 'error' : ''}>{texto}</p>
-            <input 
-                id='input'
+        <div className={`formulario ${valido === false ? 'error' : 'formulario'}`}>
+            <p className={`texto-input ${valido === false ? 'error' : 'texto-input'}`}>{texto}</p>
+            <input
                 type={tipo}
                 value={estado.campo}
                 onChange={onChange}
                 onBlur={() => validarCampo()}
                 onKeyUp={() => validarCampo()}
-                className={valido === false ? 'error' : ''} />
-            <p id='leyendaError' className={valido === false ? 'error' : ''}>{error}</p>
+                className={`input ${valido === false ? 'error' : 'input'}`} />
+            <p className={`leyendaError ${valido === false ? 'error' : 'leyendaError'}`}>{error}</p>
         </div>
     );
 }

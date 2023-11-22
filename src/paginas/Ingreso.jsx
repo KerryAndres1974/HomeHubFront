@@ -42,7 +42,6 @@ function Ingreso() {
                 cambiarFormulario(false);
             }
         } catch (error) {
-            console.error('Error al iniciar sesión:', error);
             cambiarFormulario(false);
         }
     }
