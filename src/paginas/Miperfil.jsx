@@ -154,7 +154,7 @@ function Miperfil() {
 
       <section className='contenedorCompletarPerfil'>
 
-        <p className='textoPublicacion'>Editar Perfil</p>
+        <p className='textoPublicacion'>Completar mi Perfil</p>
 
         <form className='contenedor-perfil' onSubmit={cambiarDatos}>
           <div className='contenedor-inputs'>
