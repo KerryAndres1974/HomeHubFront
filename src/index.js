@@ -1,30 +1,19 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import Recuperar from './paginas/Recuperar.jsx';
-import Servicios from './paginas/Servicios.jsx';
-import Registro from './paginas/Registro.jsx';
-import Nosotros from './paginas/Nosotros.jsx';
-import Ingreso from './paginas/Ingreso.jsx';
-import Miperfil from './paginas/Miperfil.jsx';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { AuthProvider } from './Auth/AuthProvider.jsx';
 import RutaProtegida from './RutasProtegidas.js';
+import Recuperar from './paginas/Recuperar.jsx';
+import Miperfil from './paginas/Miperfil.jsx';
+import Registro from './paginas/Registro.jsx';
+import Ingreso from './paginas/Ingreso.jsx';
+import ReactDOM from 'react-dom/client';
+import React from 'react';
 import App from './App';
 import './index.css';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import ConRegistro from './paginas/ConRegistro.jsx';
-import { AuthProvider } from './Auth/AuthProvider.jsx';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
-  },
-  {
-    path: '/Nosotros',
-    element: <Nosotros />,
-  },
-  {
-    path: '/Servicios',
-    element: <Servicios />,
   },
   {
     path: '/Ingreso',
@@ -37,11 +26,6 @@ const router = createBrowserRouter([
   {
     path: '/Recuperar',
     element: <Recuperar />,
-  },
-  {
-    path: '/Registro/ConRegistro',
-    element: <ConRegistro />,
-
   },
   {
     path: '/',

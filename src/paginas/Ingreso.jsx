@@ -10,7 +10,7 @@ function Ingreso() {
     const goTo = useNavigate();
     const auth = useAuth();
 
-    if(auth.Estalogeado){
+    if(!!auth.login()){
         return <Navigate to='/Miperfil' />
     }
 
@@ -33,15 +33,17 @@ function Ingreso() {
 
                 const { token } = await response.json();
 
-                // Manejar el token, por ejemplo, almacenarlo en el contexto de autenticación
-                // auth.login(token);
-                console.log('Token recibido:', token);
-                goTo('/')
-                auth.Estalogeado = true;
+                if (response.ok){
+                    console.log("Token recibido", token);
+                    auth.saveUser({ body: { accessToken: token, refreshToken: "dummyRefreshToken" } });
+                    goTo("/");
+                }
+
             } else {
                 cambiarFormulario(false);
             }
         } catch (error) {
+            console.error('Error al iniciar sesión:', error);
             cambiarFormulario(false);
         }
     }

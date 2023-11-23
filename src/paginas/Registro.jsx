@@ -17,7 +17,7 @@ function Registro() {
     const goTo = useNavigate();
     const auth = useAuth();
 
-    if(auth.Estalogeado){
+    if(!!auth.login()){
         return <Navigate to='/Miperfil' />
     }
 

@@ -1,15 +1,46 @@
-import { useContext, createContext, useState } from "react";
+import { useContext, createContext, useState, useEffect } from "react";
 
 const AuthContext = createContext({
-    Estalogeado: false,
+    saveUser: (userData) => {},
+    logout: () => {},
+    login: () => {},
 });
 
 export function AuthProvider({ children }) {
-    const [Estalogeado, Logear] = useState(false);
-    if(Logear){}
+    const [accessToken, setAccessToken] = useState(() => {
+        const storedToken = localStorage.getItem("token");
+        return storedToken ? JSON.parse(storedToken) : "";
+    });
 
-    return(
-        <AuthContext.Provider value={{ Estalogeado }}>
+    const [refreshToken, setRefreshToken] = useState("");
+    if(refreshToken){}
+
+    useEffect(() => {
+        const storedToken = localStorage.getItem("token");
+        if (storedToken) {
+            setAccessToken(JSON.parse(storedToken));
+        }
+    }, []);
+
+    function login() {
+        return accessToken;
+    }
+
+    function logout() {
+        setAccessToken("");
+        setRefreshToken("");
+        localStorage.removeItem("token");
+    }
+
+    function saveUser(userData) {
+        setAccessToken(userData.body.accessToken);
+        setRefreshToken(userData.body.refreshToken);
+
+        localStorage.setItem("token", JSON.stringify(userData.body.refreshToken));
+    }
+
+    return (
+        <AuthContext.Provider value={{ saveUser, logout, login }}>
             {children}
         </AuthContext.Provider>
     );

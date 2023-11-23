@@ -5,95 +5,115 @@
     margin: 0 32px;
 }
 
-.pagina-miperfil {
+.paginaMiperfil {
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     background: #f5f6f7;
 }
 
 .contenedorSubirPublicacion {
     height: 100vh;
     display: flex;
-    align-items: center;
-    justify-content: space-around;
-
-    & .contenedor-publicacion{
-        height: 500px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+    flex-direction: column;
+    justify-content: space-evenly;
     
-        & .imagenS {
-            width: 200px;
-            height: 140px;
-        }
-    
-        & .textoPublicacion{
-            font-size: 35px;
-            color: #001f3f;
-            margin-bottom: 20px;
-        }
+    & .textoPublicacion{
+        text-align: center;
+        font-size: 35px;
+        color: #001f3f;
     }
 
-    & .contenedor-formulario-publicacion {
-        width: 400px;
-        height: auto;
-        overflow: hidden;
-        transition: height 0.5s ease;
-        padding: 14px 0;
+    & .contenedorPublicacion{
         display: flex;
         align-items: center;
-        flex-direction: column;
-        justify-content: space-evenly;
-        background-color: #fff;
-        border-radius: 20px;
-        box-shadow: 13px 13px 13px 0 rgb(0 0 0 / 20%);
+        justify-content: space-around;
 
-        & .add-photo {
-            background: #3498db;;
-            border-radius: 10px;
-            min-width: 340px;
-            min-height: 150px;
-            margin-bottom: 10px;
-            border: 3px dashed #000;
-            display: grid;
-            place-items: center;
-            overflow: hidden;
-            cursor: pointer;
-            &:hover{
-                background: #2980b9;
-            }
-            & img{
-                width: 40px;
-                height: 40px;
-            }
-        }
-
-        & .texto-add-photo {
-            font-size: 0.9rem;
-            margin-top: 15px;
-            color: #001f3f;
-            padding: 2px;
-        }
+        & .contenedorImagenesPublicacion{
+            width: 400px;
+            height: 500px;
+            display: flex;
+            padding: 14px;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid grey;
         
-        & .btn-publicar{
-            font-family: Roboto, sans-serif;
-            margin: 8px 0;
-            font-size: 18px;
-            padding: 10px 0;
-            background: #3498db;
-            color: #fff;
-            border-radius: 10px;
-            cursor: pointer;
-            text-align: center;
-            width: 340px;
-            border: 2px solid #2980b9;
-            transition: 0.5s ease;
-            &:hover {
-                background-color: #2980b9;
+            & .imagenS {
+                width: 100px;
+                height: 140px;
+            }
+
+            & .imagenV {
+                border: 1px dashed grey;
+                width: 100px;
+                height: 140px;
             }
         }
-    }
+    
+        & .contenedorFormularioPublicacion {
+            width: 800px;
+            height: auto;
+            overflow: hidden;
+            transition: height 0.5s ease;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 13px 13px 13px 0 rgb(0 0 0 / 20%);
+    
+            & .contendedor-inputs {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                column-gap: 5px;
+            }
+    
+            & .add-photo {
+                background: #3498db;;
+                border-radius: 10px;
+                min-width: 340px;
+                min-height: 150px;
+                margin-bottom: 10px;
+                border: 3px dashed #000;
+                display: grid;
+                place-items: center;
+                overflow: hidden;
+                cursor: pointer;
+                &:hover{
+                    background: #2980b9;
+                }
+                & img{
+                    width: 40px;
+                    height: 40px;
+                }
+            }
+    
+            & .texto-add-photo {
+                font-size: 0.9rem;
+                margin-top: 15px;
+                color: #001f3f;
+                padding: 2px;
+            }
+            
+            & .btn-publicar{
+                font-family: Roboto, sans-serif;
+                margin: 8px 0;
+                font-size: 18px;
+                padding: 10px 0;
+                background: #3498db;
+                color: #fff;
+                border-radius: 10px;
+                cursor: pointer;
+                text-align: center;
+                width: 340px;
+                border: 2px solid #2980b9;
+                transition: 0.5s ease;
+                &:hover {
+                    background-color: #2980b9;
+                }
+            }
+        }
+    }    
 }
 
 .contenedorCompletarPerfil {
@@ -102,38 +122,49 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
+    
+    & .fotoPerfil {
+        border: 1px solid #2980b9;
+        background: #3498db;
+        border-radius: 50%;
+        margin-bottom: 9px;
+        color: #fff;
+        height: 100px;
+        width: 100px;
+        &:hover {
+            background-color: #2980b9;
+        }
+    }
 
-    & .textoPublicacion{
-        font-size: 35px;
-        color: #001f3f;
+    & .imagenP {
+        border-radius: 50%;
+        height: 100px;
+        width: 100px;
     }
 
     & .contenedor-perfil {
-        width: 1200px;
-        min-height: 450px;
+        width: 400px;
+        height: auto;
         overflow: hidden;
         transition: height 0.5s ease;
+        padding: 28px 10px;
         display: flex;
         align-items: center;
         flex-direction: column;
-        justify-content: space-evenly;
-        padding: 0 20px;
-        background: #fff;
+        background-color: #fff;
         border-radius: 20px;
         box-shadow: 13px 13px 13px 0 rgb(0 0 0 / 20%);
 
-        & .contenedor-inputs {
-            display: grid;
-            gap: 15px;
-            grid-template-columns: repeat(3, 1fr);
+        & .textoPublicacion{
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            color: #001f3f;
         }
 
         & .btn-editar {
             font-family: Roboto, sans-serif;
             font-size: 18px;
             margin-top: 26px;
-            margin-left: 20px;
-            padding: 14px 32px;
             background: #3498db;
             color: #fff;
             border-radius: 15px;
