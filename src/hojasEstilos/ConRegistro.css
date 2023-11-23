@@ -1,0 +1,45 @@
+#principal{
+    height: 100vh;
+    display: grid;
+    place-items: center;
+}
+
+#titulo{
+    max-width: 940;
+    font-size: 1.5em;
+    font-family: Lato, sans-serif;
+    font-weight: 700;
+    line-height: 1.1;
+    margin: 40px 0;
+    justify-content: center;
+    text-align: center;
+}
+
+#contenedor{
+    width: 800px;
+    height: auto;
+    overflow: hidden;
+    transition: height 0.5s ease;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    background-color: #99c9ff38;
+    backdrop-filter: blur(5px);
+    border-radius: 20px 0 20px 0;
+    box-shadow: 0 3px 13px 1px rgb(0 0 0 / 9%);
+}
+
+
+#Desc{
+    justify-content: left;
+    font-family: Lato, sans-serif;
+    font-size: 1.1em;
+}
+
+#contenedor-campos{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 5px;
+}
+
