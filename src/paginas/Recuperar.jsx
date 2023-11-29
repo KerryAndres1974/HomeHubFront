@@ -3,6 +3,7 @@ import Inputs from '../componentes/Inputs.jsx';
 import { Navigate, useNavigate } from 'react-router-dom';
 import '../hojasEstilos/Recuperar.css';
 import { useState } from 'react';
+import Swal from 'sweetalert2';
 
 function Recuperar() {
     const [usuario, cambiarUsuario] = useState({campo: '', valido: null});
@@ -10,7 +11,6 @@ function Recuperar() {
     const [rcontra, cambiarRcontra] = useState({campo: '', valido: null});
 
     // Para mostrar errores y avanzar en los formularios
-    const [formularioValido, cambiarFormulario] = useState(null);
     const [correoValido, cambiarCorreo] = useState(null);
     const [codigoValido, cambiarCodigo] = useState(null);
     const [fase, setFase] = useState(1);
@@ -129,20 +129,41 @@ function Recuperar() {
             })
             .then(data => {
                 // Manejar la respuesta exitosa aquí
-                console.log('Respuesta exitosa:', data);
-                cambiarFormulario(true);
                 cambiarCodigo(null);
-                goTo('/Ingreso');
+                Swal.fire({
+                    icon: "success",
+                    title: "Tu contraseña ha sido cambiada Exitosamente",
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    allowEnterKey: false,
+                    timer: 5000,
+                    timerProgressBar: true,
+                }).then(() => {
+                    goTo('/Ingreso');
+                });
             })
             .catch(error => {
                 // Manejar errores de la solicitud aquí
-                console.error('Error en la solicitud:', error);
-                cambiarCorreo(false);
+                Swal.fire({
+                    icon: "error",
+                    title: "Algo salio mal...",
+                    text: error,
+                    showConfirmButton: false,
+                    allowOutsideClick: true,
+                    allowEnterKey: true,
+                  });
                 cambiarCodigo(null);
             });
 
         } else {
-            cambiarFormulario(false);
+            Swal.fire({
+                icon: "error",
+                title: "Algo salio mal...",
+                text: "Debes rellenar todos los campos",
+                showConfirmButton: false,
+                allowOutsideClick: true,
+                allowEnterKey: true,
+            });
         }
     }
 
@@ -237,14 +258,6 @@ function Recuperar() {
 
                 {correoValido === false && <div id='mensajeError'>
                     <p>Usuario invalido</p>
-                </div>}
-
-                {formularioValido === false && <div id='mensajeError'>
-                    <p><b>Error: </b>Completa el formulario</p>
-                </div>}
-
-                {formularioValido === true && <div id='mensaje-Exito' >
-                    <p>contraseña cambiada exitosamente</p>
                 </div>}
 
             </form>)}

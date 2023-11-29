@@ -1,17 +1,23 @@
 import '../hojasEstilos/Proyectos.css';
-/*https://jminmobiliaria.co/proyectos-en-venta/
-https://www.realtor.com/international/co/house/*/
-function Proyectos( props ) {
+
+function Proyectos(props) {
     return (
-        <div className='contenedor-propiedad'>
+        <div className='contenedorPropiedad'>
+
+            {props.coincide ? (<h1 className='contorno'>Editar</h1>) : 
+            (props.coincide === false ? (<h1 className='contorno'>Ver Detalles</h1>) : 
+            (<p className='contorno' style={{display: 'none'}}></p>))}
+            
             <img
-                className='imagen' 
-                src={require(`../multimedia/${props.imagen}.jpg`)} 
-                alt='Foto propiedad' />
-            <div className='contenedor-texto-propiedad'>
-                <p className='titulo-propiedad'>{props.titulo}</p>
-                <p className='textos-propiedad'>{props.textos}</p>
-                <p className='precio-propiedad'>{props.precio}</p>
+                className='imagen'
+                src={require(`../multimedia/${props.imagen}.jpg`)}
+                alt='Foto propiedad'
+            />
+            <div className='contenedorTextoPropiedad'>
+                <p className='recuadro'></p>
+                <p className='tituloPropiedad'>Se vende {props.tipo} en {props.ciudad}</p>
+                <p className='textosPropiedad'>Hubicada en {props.direccion}, {props.descripcion}</p>
+                <p className='precioPropiedad'>$ {props.precio}</p>
             </div>
         </div>
     );

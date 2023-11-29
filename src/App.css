@@ -1,14 +1,12 @@
 * { 
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    scroll-behavior: smooth;
 }
 
 .lineaH {
     width: 95%;
     height: 1px;
-    background: grey;
+    background: #000;
 }
 
 .lineaV {
@@ -19,7 +17,12 @@
 }
 
 .contenedorPrincipal {
-    background: #f5f6f7;
+  background-image: url('./multimedia/fondoApp.jpg');
+  background-size: 100% cover;
+  background-repeat: repeat; /* O "repeat-x" para repetir solo en la dirección horizontal */
+  background-position: fixed;
+  margin: 0; /* Asegura que no haya margen alrededor del cuerpo de la página */
+  padding: 0; /* Asegura que no haya relleno alrededor del cuerpo de la página */
 }
 
 header {
@@ -27,15 +30,22 @@ header {
     z-index: 1000;
     width: 100%;
     top: 0;
+    background: #2c3e50;
 
     & .navegador {
         padding: 20px;
         display: flex;
         align-items: center;
-        background-color: #2c3e50;
 
         & .contenedor {
             display: flex;
+
+            & .imagenMenu {
+                cursor: pointer;
+                width: 40px;
+                height: 40px;
+            }
+            
             & .titulo{
                 color: #fff;
                 margin: 0 20px;
@@ -46,7 +56,8 @@ header {
 
             & .menu {
                 display: flex;
-                & .contPest {
+
+                & .contenidoPestaña {
                     list-style: none;
                     margin-bottom: 10px;
                 }
@@ -59,16 +70,39 @@ header {
                     text-decoration: none;
                     transition: all 0.5s ease;
                     &:hover {
-                        color: #2c3e50;
-                        padding: 5px 10px;
-                        border-radius: 15px;
-                        background: #f5f6f7;
-                    }
-                }
+                    color: #2c3e50;
+                    padding: 5px 10px;
+                    border-radius: 15px;
+                    background: #f5f6f7;
+                }}
             }
         }
     }
 }
+
+.menuVertical {
+    list-style: none;
+    position: absolute;
+    right: 0;
+    margin: 2px 2px 0 0;
+    background: #2c3e50;
+    display: flex;
+    flex-direction: column;
+    height: 210px;
+    width: 200px;
+    justify-content: space-between;
+    border-radius: 10px;
+
+    & .pestaña {
+        padding: 10px;
+        text-decoration: none;
+        color: #fff;
+        transition: all 0.4s ease;
+        &:hover {
+        border-radius: 10px;
+        background: grey;
+    }}
+  }
 
 .SeccionHome {
     display: flex;
@@ -93,8 +127,8 @@ header {
             left: 50%;
             z-index: 2;
             width: 450px;
-            height: 180px;
-            padding: 25px;
+            height: 130px;
+            padding: 20px 25px;
             display: flex;
             background: #fff;
             position: absolute;
@@ -148,7 +182,13 @@ header {
     align-items: center;
     justify-content: space-around;
 
+    & .contenedor-oculto{
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
+
     & .tituloEmpresa {
+        opacity: 1;
         width: 350px;
         height: 400px;
         font-size: 5em;
@@ -158,14 +198,13 @@ header {
         text-shadow: 8px 8px 3px #c3e6cb;
         transition: all 1s ease;
         &:hover {
-            text-shadow: 8px 8px 3px #71b180;
-        }
-    }
+        text-shadow: 8px 8px 3px #81c09a;
+    }}
 
     & .contenedorNosotros {
         margin-top: 60px;
         border-radius: 20px;
-        background: #c3e6cb;
+        background: #81c09a;
         padding: 20px 0;
         height: 470px;
         width: 800px;
@@ -175,15 +214,21 @@ header {
         justify-content: space-between;
 
         & .textoNosotros {
-            width: 735px;
-            height: 120px;
+            width: 720px;
+            height: 100px;
             font-size: 1.05em;
-            background: #2c3e50;
+            display: grid;
+            place-items: center;
+            background: #61778a;
             color: #f5f6f7;
-            padding: 10px 15px;
+            padding: 10px 20px;
             border-radius: 10px;
             font-family: Lato, sans-serif;
-        }
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            &:hover {
+            transform: translateY(-10px);
+            box-shadow: 13px 13px 13px 0 rgb(0 0 0 / 20%);
+        }}
 
         & .contenedorMV {
             width: 735px;
@@ -193,7 +238,7 @@ header {
             justify-content: space-around;
 
             & .tituloParrafo {
-                width: 350px;
+                width: 330px;
                 height: 30px;
                 font-size: 1.2em;
                 text-align: center;
@@ -202,13 +247,20 @@ header {
 
             & .contenidoParrafo {
                 height: 250px;
-                width: 350px;
+                width: 300px;
                 font-size: 1.05em;
-                background: #2c3e50;
+                background: #61778a;
+                display: grid;
+                place-items: center;
+                text-align: center;
                 color: #f5f6f7;
                 border-radius: 10px;
-                padding: 10px 15px;
-            }
+                padding: 10px 25px;
+                transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+                &:hover {
+                transform: translateY(-10px);
+                box-shadow: 13px 13px 13px 0 rgb(0 0 0 / 20%);
+            }}
         }
     }
 }
@@ -228,12 +280,12 @@ header {
         border-radius: 20px;
         width: 500px;
         height: 100px;
-        background: #c3e6cb;;
+        background: #81c09a;
     }
 
     & .contenedorServicios {
         border-radius: 20px;
-        background: #c3e6cb;;
+        background: #81c09a;
         width: 1300px;
         height: 400px;
         display: flex;
@@ -253,14 +305,19 @@ header {
             }
 
             & .parrafoServicios {
-                border: 1px solid grey;
+                border: 1px solid #2c3e50;
                 text-align: center;
                 padding: 15px;
                 height: 220px;
+                display: grid;
+                place-items: center;
                 border-radius: 10px;
-                background: #2c3e50;
                 color: #f5f6f7;
-            }
+                transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+                &:hover {
+                transform: translateY(-10px);
+                box-shadow: 13px 13px 13px 0 rgb(0 0 0 / 20%);
+            }}
         }
     }
 }

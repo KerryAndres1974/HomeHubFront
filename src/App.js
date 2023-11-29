@@ -2,15 +2,44 @@ import Proyecto from './componentes/Proyectos.jsx';
 import { useAuth } from './Auth/AuthProvider.jsx';
 import videoBg from './multimedia/videofondo.mp4';
 import { Outlet, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import './App.css';
 
 export function App() {
   const auth = useAuth();
   const logeado = () => !!auth.login();
+  const [usuario, setUsuario] = useState(null);
+  const [proyecto, setProyecto] = useState([]);
+  const [menuVisible, setMenuVisible] = useState(false);
 
   const deslogeado = () => {
+    window.location.reload();
+    setMenuVisible(false);
     auth.logout();
   };
+
+  useEffect(() => {
+    // Aquí obtén tu token JWT de alguna manera (por ejemplo, desde localStorage)
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      try {
+        // Divide el token en sus partes: encabezado, carga útil y firma
+        const [, cargaUtilBase64, ] = token.split('.');
+
+        // Decodifica la carga útil (segunda parte del token)
+        const cargaUtilDecodificada = atob(cargaUtilBase64);
+
+        // Convierte la carga útil decodificada a un objeto JavaScript
+        const usuario = JSON.parse(cargaUtilDecodificada);
+
+        // Puedes establecer el usuario en el estado
+        setUsuario(usuario);
+      } catch (error) {
+        console.error('Error al decodificar el token:', error);
+      }
+    }
+  }, []);
 
   const handleClick = (event) => {
     event.preventDefault();
@@ -29,6 +58,32 @@ export function App() {
     }
   };
 
+  const toggleMenu = () => {
+    setMenuVisible(!menuVisible);
+  };
+
+  useEffect(() => {
+    const cargarProyectos = async () => {
+        try {
+            const response = await fetch(`http://localhost:8000/all-proyectos-activos`);
+
+            if(response.ok){
+                const data = await response.json();
+                setProyecto(data);
+            } else {
+                console.error('Error al obtener los proyectos:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error al realizar la petición:', error);
+        }
+    };
+
+    cargarProyectos(); // Llama a la función aquí
+
+  }, []);
+
+  useEffect(() => {}, [proyecto]);
+
   return (
     <div className='contenedorPrincipal'>
       <header>
@@ -36,35 +91,48 @@ export function App() {
           <div className='contenedor'>
             <div className='titulo'>Home Hub</div>
             <ul className='menu'>
-              <li className='contPest'><a href='#seccion1' className='pestaña' onClick={handleClick}>Inicio</a></li>
-              <li className='contPest'><a href='#seccion2' className='pestaña' onClick={handleClick}>Nosotros</a></li>
-              <li className='contPest'><a href='#seccion3' className='pestaña' onClick={handleClick}>Servicios</a></li>
+              <li className='contenidoPestaña'><a href='#seccion1' className='pestaña' onClick={handleClick}>Inicio</a></li>
+              <li className='contenidoPestaña'><a href='#seccion2' className='pestaña' onClick={handleClick}>Nosotros</a></li>
+              <li className='contenidoPestaña'><a href='#seccion3' className='pestaña' onClick={handleClick}>Servicios</a></li>
             </ul>
           </div>
           
           {logeado() === false && <div className='contenedor'>
             <ul className='menu'>
-              <li className='contPest'><Link to="/Ingreso" className='pestaña' >Ingresar</Link></li>
-              <li className='contPest'><Link to="/Registro" className='pestaña' >Registrarse</Link></li>
+              <li className='contenidoPestaña'><Link to="/Ingreso" className='pestaña' >Ingresar</Link></li>
+              <li className='contenidoPestaña'><Link to="/Registro" className='pestaña' >Registrarse</Link></li>
             </ul>
           </div>}
           
           {logeado() === true && <div className='contenedor'>
-            <ul className='menu'>
-              <li className='contPest'><Link to="/Miperfil" className='pestaña' >Mi perfil</Link></li>
-              <li className='contPest'><Link to="/" className='pestaña' onClick={deslogeado}>Salir</Link></li>
-            </ul>
+            <img
+              src={require('./multimedia/menu.png')}
+              alt='menu'
+              className='imagenMenu'
+              onClick={toggleMenu}
+            />
           </div>}
+          
         </nav>
+
+        {menuVisible && <ul className='menuVertical'>
+          <Link to="/Editar-perfil" className='pestaña'>Editar Perfil</Link>
+          <Link to="/Completar-perfil" className='pestaña'>Completar Perfil</Link>
+          <Link to="/Mis-publicaciones" className='pestaña'>Mis Publicaciones</Link>
+          <Link to="/Publicar-inmueble" className='pestaña'>Publicar Inmueble</Link>
+          <Link to="/" onClick={deslogeado} className='pestaña'>Salir</Link>
+        </ul>}
+
         <Outlet />
       </header>
 
       <section className='SeccionHome' id='seccion1'>
-
+        
         <section className='contenedorBienvenida'>
           <video src={videoBg} autoPlay loop muted className='videoHome'/>
-          <div className='contenedorApertura'>
-            <h1 className='tituloBienvenida'>¡Bienvenido a Home Hub!</h1>
+          <div className='contenedorApertura'> 
+            <h1 className='tituloBienvenida'>{usuario ? `¡Bienvenido a Home Hub ${usuario.userId.username}!` : 
+            '¡Bienvenido a Home Hub!'}</h1>
             <p className='textoBienvenida'>Hacemos realidad tus metas 
             inmobiliarias con profesionalismo y dedicación.<br/>¡Encuentra propiedades que se adaptan a tu 
             estilo de vida!</p>
@@ -78,51 +146,21 @@ export function App() {
           <p className='lineaH'></p>
           
           <div className='contenedorProyectos'>
-            <Proyecto
-              imagen='casa1'
-              titulo='Casa en Venta'
-              textos='En esta sección se muestran los proyectos que he 
-              realizado en mi vida profesional y académica'
-              precio='Por un precio de 120000000$'
-            />
-            <Proyecto
-              imagen='casa2'
-              titulo='Casa en Venta'
-              textos='En esta sección se muestran los proyectos que he 
-              realizado en mi vida profesional y académica'
-              precio='Por un precio de 120000000$'
-            />
-            <Proyecto
-              imagen='casa3'
-              titulo='Casa en Venta'
-              textos='En esta sección se muestran los proyectos que he 
-              realizado en mi vida profesional y académica'
-              precio='Por un precio de 120000000$'
-            />
-            <Proyecto
-              imagen='casa4'
-              titulo='Casa en Venta'
-              textos='En esta sección se muestran los proyectos que he 
-              realizado en mi vida profesional y académica'
-              precio='Por un precio de 120000000$'
-            />
-            <Proyecto
-              imagen='casa5'
-              titulo='Casa en Venta'
-              textos='En esta sección se muestran los proyectos que he 
-              realizado en mi vida profesional y académica'
-              precio='Por un precio de 120000000$'
-            />
-            <Proyecto
-              imagen='casa6'
-              titulo='Casa en Venta'
-              textos='En esta sección se muestran los proyectos que he 
-              realizado en mi vida profesional y académica'
-              precio='Por un precio de 120000000$'
-            />
+            {proyecto.map((proyecto) => (
+              <Proyecto
+                  key={proyecto.id}
+                  tipo={proyecto.tipo}
+                  ciudad={proyecto.ciudad}
+                  precio={proyecto.precio}
+                  imagen='casa1'
+                  direccion={proyecto.direccion}
+                  descripcion={proyecto.descripcion}
+                  coincide={usuario ? (usuario.userId.id === proyecto.idusuario ? true : false) : false}
+              />
+            ))}
           </div>
         </section>
-        <p className='lineaH' style={{margin: '70px 0 0 0', border: '2px dashed #2c3e50'}}></p>
+        
       </section>
 
       <section className='SeccionNosotros' id='seccion2'>
@@ -154,34 +192,34 @@ export function App() {
       </section>
 
       <section className='SeccionServicios' id='seccion3'>
-      <p className='lineaH' style={{border: '2px dashed #2c3e50'}}></p>
+        
         <h1 className='tituloServicios'>Home Hub te ofrece Servicios como:</h1>
         <div className='contenedorServicios'>
 
           <div className='subcontenedorServicios'>
             <h1 className='subtituloServicio'>Compra de Propiedades</h1>
-            <p className='parrafoServicios'>Home Hub facilita el proceso de compra de propiedades, 
+            <p className='parrafoServicios' style={{background: '#94a7b9'}} >Home Hub facilita el proceso de compra de propiedades, 
             conectando a compradores con las mejores opciones del mercado. Nuestro equipo de expertos 
             en bienes raíces se encarga de evaluar y presentar propiedades que se ajusten a tus criterios 
             y necesidades.</p>
           </div>
           <div className='subcontenedorServicios'>
             <h1 className='subtituloServicio'>Venta de Propiedades</h1>
-            <p className='parrafoServicios'>Si estás buscando vender tu propiedad, Home Hub ofrece 
+            <p className='parrafoServicios' style={{background: '#7a8f9f'}} >Si estás buscando vender tu propiedad, Home Hub ofrece 
             servicios de intermediación para maximizar la visibilidad de tu inmueble en el mercado. 
             Nos encargamos de promocionar tu propiedad, gestionar las negociaciones y cerrar acuerdos 
             beneficiosos para ti como vendedor.</p>
           </div>
           <div className='subcontenedorServicios'>
             <h1 className='subtituloServicio'>Gestion de Propiedades</h1>
-            <p className='parrafoServicios'>Para propietarios que desean ofrecer sus propiedades sin 
+            <p className='parrafoServicios' style={{background: '#61778a'}} >Para propietarios que desean ofrecer sus propiedades sin 
             preocupaciones, ofrecemos servicios de gestión de propiedades. Esto incluye mantenimiento 
             del inmueble, coordinación de pagos y solución de problemas cotidianos, permitiendo a los 
             propietarios disfrutar de sus inversiones sin complicaciones.</p>
           </div>
           <div className='subcontenedorServicios'>
             <h1 className='subtituloServicio'>Asesoramiento Financiero</h1>
-            <p className='parrafoServicios'>En Home Hub, entendemos que la inversión en bienes raíces 
+            <p className='parrafoServicios' style={{background: '#475a6d'}} >En Home Hub, entendemos que la inversión en bienes raíces 
             es una decisión financiera importante. Ofrecemos servicios de asesoramiento financiero 
             para ayudarte a tomar decisiones informadas sobre la compra, venta o inversión en propiedades.</p>
           </div>

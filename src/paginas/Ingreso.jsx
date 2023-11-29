@@ -34,8 +34,7 @@ function Ingreso() {
                 const { token } = await response.json();
 
                 if (response.ok){
-                    console.log("Token recibido", token);
-                    auth.saveUser({ body: { accessToken: token, refreshToken: "dummyRefreshToken" } });
+                    auth.saveUser({ body: { accessToken: "dummyRefreshToken", refreshToken: token } });
                     goTo("/");
                 }
 
@@ -50,6 +49,7 @@ function Ingreso() {
 
     return(
         <div id='principal-login'>
+
             <form id='contenedor-login' onSubmit={onSubmits}>
                 <p id='texto-login'>Inicia sesión</p>
 
