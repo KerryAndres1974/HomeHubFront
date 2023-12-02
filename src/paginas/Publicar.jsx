@@ -198,7 +198,7 @@ function Mispublicaiones() {
             <select className='formularioDinamico'
              value={ciudad}
              onChange={(e) => setCiudad(e.target.value)}>
-              <option disabled selected=' '>Ciudad</option>
+              <option disabled >Ciudad</option>
               <option>Cali</option>
               <option>Buga</option>
               <option>Tuluá</option>
@@ -209,7 +209,7 @@ function Mispublicaiones() {
             <select className='formularioDinamico'
              value={tipo}
              onChange={(e) => setTipo(e.target.value)}>
-              <option disabled selected=' '>Tipo</option>
+              <option disabled >Tipo</option>
               <option>Casa</option>
               <option>Apartamento</option>
             </select>

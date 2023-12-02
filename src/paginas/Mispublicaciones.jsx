@@ -54,7 +54,7 @@ function Mispublicaciones() {
     }
 
     const handleClick = (idProyecto) => {
-        goTo(`/Editar-inmueble/${idProyecto}`);
+        goTo(`/Mis-publicaciones/Editar-inmueble/${idProyecto}`);
         console.log(proyecto.id);
     };
 

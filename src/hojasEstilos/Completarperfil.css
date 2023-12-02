@@ -9,11 +9,14 @@
 }
 
 @keyframes desplazamiento {
-    from {
-        background-position: 0 100%; /* Posición inicial, 100% significa que la imagen está totalmente desplazada hacia arriba */
+    0% {
+        background-position: 0 0; /* Comienza en la posición inicial */
     }
-    to {
-        background-position: 0 0; /* Posición final */
+    50% {
+        background-position: 0 100%; /* Llega a la posición final en la mitad del tiempo */
+    }
+    100% {
+        background-position: 0 0; /* Vuelve a la posición inicial al final */
     }
 }
 

@@ -1,12 +1,13 @@
 import Proyecto from './componentes/Proyectos.jsx';
 import { useAuth } from './Auth/AuthProvider.jsx';
 import videoBg from './multimedia/videofondo.mp4';
-import { Outlet, Link } from 'react-router-dom';
+import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import './App.css';
 
 export function App() {
   const auth = useAuth();
+  const goTo = useNavigate();
   const logeado = () => !!auth.login();
   const [usuario, setUsuario] = useState(null);
   const [proyecto, setProyecto] = useState([]);
@@ -41,11 +42,11 @@ export function App() {
     }
   }, []);
 
-  const handleClick = (event) => {
-    event.preventDefault();
+  const handleClick = (e) => {
+    e.preventDefault();
 
     // Obtiene el hash de la URL del enlace
-    const targetId = event.currentTarget.getAttribute('href').substring(1);
+    const targetId = e.currentTarget.getAttribute('href').substring(1);
 
     // Encuentra el elemento con el id correspondiente
     const targetElement = document.getElementById(targetId);
@@ -84,8 +85,18 @@ export function App() {
 
   useEffect(() => {}, [proyecto]);
 
+  const Verproyecto = (Propietario, Usuario, idProyecto) => {
+    
+    if(Propietario === Usuario){
+      goTo(`/Mis-publicaciones/Editar-inmueble/${idProyecto}`);
+    } else {
+      goTo(`/Detalles-inmueble/${idProyecto}`);
+    }
+  };
+
   return (
     <div className='contenedorPrincipal'>
+      
       <header>
         <nav className='navegador'>
           <div className='contenedor'>
@@ -140,23 +151,25 @@ export function App() {
         </section>
 
         <section className='contenedorPropiedades'>
-
           <p className='lineaH' style={{margin: '20px 0 0 0'}}></p>
           <h1 className='tituloProyectos'>Proyectos para tu Familia</h1>
           <p className='lineaH'></p>
           
-          <div className='contenedorProyectos'>
+          <div className='contenedorFamiliaProyectos'>
             {proyecto.map((proyecto) => (
-              <Proyecto
-                  key={proyecto.id}
-                  tipo={proyecto.tipo}
-                  ciudad={proyecto.ciudad}
-                  precio={proyecto.precio}
-                  imagen='casa1'
-                  direccion={proyecto.direccion}
-                  descripcion={proyecto.descripcion}
-                  coincide={usuario ? (usuario.userId.id === proyecto.idusuario ? true : false) : false}
-              />
+              <div className='contenedorXProyecto' onClick={() => 
+              {usuario ? Verproyecto(proyecto.idusuario, usuario.userId.id, proyecto.id) : 
+                goTo(`/Detalles-inmueble/${proyecto.id}`)}} key={proyecto.id}>
+                <Proyecto
+                    tipo={proyecto.tipo}
+                    ciudad={proyecto.ciudad}
+                    precio={proyecto.precio}
+                    imagen='casa4'
+                    direccion={proyecto.direccion}
+                    descripcion={proyecto.descripcion}
+                    coincide={usuario ? (usuario.userId.id === proyecto.idusuario ? true : false) : false}
+                />
+              </div>
             ))}
           </div>
         </section>
@@ -165,30 +178,21 @@ export function App() {
 
       <section className='SeccionNosotros' id='seccion2'>
         
+        <p className='contenidoParrafo'><h1 className='tituloParrafo' style={{margin: '0 0 5px 0'}}>Misión.</h1>
+        Nuestra Misión es facilitar el acceso a hogares que reflejen 
+        los sueños y necesidades únicas de cada individuo. En Home Hub, nos enorgullece ser agentes 
+        de cambio en la vida de las personas, guiándolas hacia propiedades que no solo satisfacen 
+        sus necesidades habitacionales, sino que también dan vida a sus aspiraciones.</p>
+
         <h1 className='tituloEmpresa'><br/>Home<br/>Hub</h1>
-        <div className='contenedorNosotros'>
-
-          <p className='textoNosotros'>Somos una empresa inmobiliaria comprometida en hacer realidad tus 
-          sueños de hogar a través de una amplia selección de propiedades y un equipo apasionado. Nuestra 
-          Misión y Visión nos guían en esta travesía hacia la creación de experiencias inolvidables. Únete 
-          a nosotros para descubrir cómo transformamos tus aspiraciones de hogar en una realidad tangible.</p>
-          <div className='contenedorMV'>
-
-            <div className='parrafo'>
-              <h1 className='tituloParrafo'>Misión.</h1>
-              <p className='contenidoParrafo'>Nuestra Misión es facilitar el acceso a hogares que reflejen 
-              los sueños y necesidades únicas de cada individuo. En Home Hub, nos enorgullece ser agentes 
-              de cambio en la vida de las personas, guiándolas hacia propiedades que no solo satisfacen 
-              sus necesidades habitacionales, sino que también dan vida a sus aspiraciones.</p></div>
-            <div className='parrafo'>
-              <h1 className='tituloParrafo'>Visión.</h1>
-              <p className='contenidoParrafo'>Nuestra Visión es trascender las expectativas comunes de la 
-              industria inmobiliaria. Nos visualizamos como líderes innovadores que redefinen la experiencia 
-              de encontrar el hogar perfecto. Nuestra Visión va más allá de simples transacciones; aspiramos 
-              a ser facilitadores de sueños, proporcionando soluciones habitacionales que marcan la 
-              diferencia en la vida de las personas.</p></div>
-          </div>
-        </div>
+      
+        <p className='contenidoParrafo'><h1 className='tituloParrafo' style={{margin: '0 0 5px 0'}}>Visión.</h1>
+        Nuestra Visión es trascender las expectativas comunes de la 
+        industria inmobiliaria. Nos visualizamos como líderes innovadores que redefinen la experiencia 
+        de encontrar el hogar perfecto. Nuestra Visión va más allá de simples transacciones; aspiramos 
+        a ser facilitadores de sueños, proporcionando soluciones habitacionales que marcan la 
+        diferencia en la vida de las personas.</p>
+        
       </section>
 
       <section className='SeccionServicios' id='seccion3'>
@@ -198,28 +202,28 @@ export function App() {
 
           <div className='subcontenedorServicios'>
             <h1 className='subtituloServicio'>Compra de Propiedades</h1>
-            <p className='parrafoServicios' style={{background: '#94a7b9'}} >Home Hub facilita el proceso de compra de propiedades, 
+            <p className='parrafoServicios'  >Home Hub facilita el proceso de compra de propiedades, 
             conectando a compradores con las mejores opciones del mercado. Nuestro equipo de expertos 
             en bienes raíces se encarga de evaluar y presentar propiedades que se ajusten a tus criterios 
             y necesidades.</p>
           </div>
           <div className='subcontenedorServicios'>
             <h1 className='subtituloServicio'>Venta de Propiedades</h1>
-            <p className='parrafoServicios' style={{background: '#7a8f9f'}} >Si estás buscando vender tu propiedad, Home Hub ofrece 
+            <p className='parrafoServicios'  >Si estás buscando vender tu propiedad, Home Hub ofrece 
             servicios de intermediación para maximizar la visibilidad de tu inmueble en el mercado. 
             Nos encargamos de promocionar tu propiedad, gestionar las negociaciones y cerrar acuerdos 
             beneficiosos para ti como vendedor.</p>
           </div>
           <div className='subcontenedorServicios'>
             <h1 className='subtituloServicio'>Gestion de Propiedades</h1>
-            <p className='parrafoServicios' style={{background: '#61778a'}} >Para propietarios que desean ofrecer sus propiedades sin 
+            <p className='parrafoServicios'  >Para propietarios que desean ofrecer sus propiedades sin 
             preocupaciones, ofrecemos servicios de gestión de propiedades. Esto incluye mantenimiento 
             del inmueble, coordinación de pagos y solución de problemas cotidianos, permitiendo a los 
             propietarios disfrutar de sus inversiones sin complicaciones.</p>
           </div>
           <div className='subcontenedorServicios'>
             <h1 className='subtituloServicio'>Asesoramiento Financiero</h1>
-            <p className='parrafoServicios' style={{background: '#475a6d'}} >En Home Hub, entendemos que la inversión en bienes raíces 
+            <p className='parrafoServicios'  >En Home Hub, entendemos que la inversión en bienes raíces 
             es una decisión financiera importante. Ofrecemos servicios de asesoramiento financiero 
             para ayudarte a tomar decisiones informadas sobre la compra, venta o inversión en propiedades.</p>
           </div>
@@ -245,6 +249,7 @@ export function App() {
           <p className='rutaPie'>Twitter</p>
         </div>
       </footer>
+
     </div>
   );
 }

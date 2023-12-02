@@ -10,6 +10,7 @@ import Publicar from './paginas/Publicar.jsx';
 import Ingreso from './paginas/Ingreso.jsx';
 import ReactDOM from 'react-dom/client';
 import Editarinmueble from './paginas/Editarinmueble.jsx';
+import Detallesinmueble from './paginas/Detallesinmueble.jsx';
 import React from 'react';
 import App from './App';
 import './index.css';
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
     element: <Recuperar />,
   },
   {
+    path: '/Detalles-inmueble/:idProyecto',
+    element: <Detallesinmueble />,
+  },
+  {
     path: '/',
     element: <RutaProtegida />,
     children: [
@@ -48,12 +53,12 @@ const router = createBrowserRouter([
         element: <Publicar />,
       },
       {
-        path: '/Editar-inmueble/:idProyecto',
-        element: <Editarinmueble />,
-      },
-      {
         path: '/Mis-publicaciones',
         element: <Mispublicaciones />,
+      },
+      {
+        path: '/Mis-publicaciones/Editar-inmueble/:idProyecto',
+        element: <Editarinmueble />,
       },
     ]
   },

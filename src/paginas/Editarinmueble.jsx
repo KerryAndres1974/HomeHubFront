@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import Inputs from '../componentes/Inputs.jsx';
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import '../hojasEstilos/Editarinmueble.css';
 import Proyectos from '../componentes/Proyectos.jsx';
 import Swal from 'sweetalert2';
-import { useNavigate } from "react-router-dom";
 
 export function Editarproyecto() {
     const [descripcion, setDescripcion] = useState({campo: '', valido: null});
@@ -160,7 +159,6 @@ export function Editarproyecto() {
     return(
 
         <div className='contenedorPrincipalEdicion'>
-            <h2>Editar tu Inmueble ID: {idProyecto}</h2>
 
             <div className='contenedorInformacionInmueble'>
 
@@ -180,7 +178,7 @@ export function Editarproyecto() {
 
                 <form className='contenedorEditar' onSubmit={actualizaProyecto}>
                     
-                    <p className='tituloEditar'>Editar</p>
+                    <h2 className='tituloEditar'>Editar tu Inmueble ID: {idProyecto}</h2>
                     <div className='contenedor-inputs'>
                         <Inputs
                             estado={nombre}
@@ -204,7 +202,7 @@ export function Editarproyecto() {
                         <select className='formularioDinamico'
                         value={ciudad}
                         onChange={(e) => setCiudad(e.target.value)}>
-                            <option disabled selected=' '>Ciudad</option>
+                            <option disabled >Ciudad</option>
                             <option>Cali</option>
                             <option>Buga</option>
                             <option>Tuluá</option>
@@ -214,7 +212,7 @@ export function Editarproyecto() {
                         <select className='formularioDinamico'
                         value={tipo}
                         onChange={(e) => setTipo(e.target.value)}>
-                            <option disabled selected=' '>Tipo</option>
+                            <option disabled >Tipo</option>
                             <option>Casa</option>
                             <option>Apartamento</option>
                         </select>

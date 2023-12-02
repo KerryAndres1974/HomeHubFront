@@ -2,7 +2,10 @@
     height: 100vh;
     display: grid;
     place-items: center;
-    background: #f5f6f7;
+    background-image: url('../multimedia/fondo.jpg');
+    background-position: center center;
+    background-repeat: repeat;
+    animation: desplazamiento 30s linear infinite;
 }
 
 .contenedorEditar {

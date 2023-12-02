@@ -1,0 +1,171 @@
+.paginaDetalles {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+}
+
+.parte1 {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+
+    & .detalles {
+        height: 90%;
+        width: 50%;
+        background: #2c3e50;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-evenly;
+        font-family: Lato, sans-serif;
+
+        & .precioInmuebles {
+            height: 100px;
+            width: 500px;
+            display: grid;
+            place-items: center;
+            font-size: 2rem;
+            color: #fff;
+            background: #888;
+        }
+
+        & .contenidoAdd{
+            height: 200px;
+            width: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #fff;
+            border: 2px solid grey;
+
+            & .addI {
+                width: 43%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                justify-content: space-evenly;
+            }
+
+            & .addD {
+                width: 55%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-evenly;
+            }
+        }
+    }
+
+    & .caracteristicas {
+        height: 90%;
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-evenly;
+        font-family: Lato, sans-serif;
+        background: #888;
+
+        & .textoZonas{
+            width: 80%;
+            height: 100px;
+            display: flex;
+            color: #2c3e50;
+            align-items: flex-end;
+        }
+
+        & .zonasComunes {
+            width: 85%;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            border-top: 2px solid #2c3e50;
+            border-bottom: 2px solid #2c3e50;
+            
+            & div {
+                width: 40%;
+                height: 70%;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-evenly;
+            }
+        }
+    }
+}
+
+.parte2 {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background: #006a98;
+
+    & .galeria {
+        width: 600px;
+        height: 600px;
+        display: flex;
+        color: #fff;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+
+        & .tituloGaleria {
+            font-size: 3rem;
+            color: #fff;
+        }
+    }
+
+    & .datosInteresado {
+        width: 40%;
+        height: 650px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-evenly;
+        background: #fff;
+
+        & .tituloInteresado {
+            font-size: 1.8rem;
+            color: #006a98;
+        }
+
+        & .contenedorInputs {
+            width: 400px;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-evenly;
+
+            & .terminos {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 300px;
+                font-size: 0.8rem;
+            }
+        }
+
+        & .btn-enviar {
+            font-family: Roboto, sans-serif;
+            font-size: 18px;
+            padding: 14px 32px;
+            background: #3498db;
+            color: #fff;
+            border-radius: 15px;
+            cursor: pointer;
+            text-align: center;
+            width: 250px;
+            border: 2px solid #2980b9;
+            transition: all 0.3s ease;
+            &:hover {
+                background-color: #2980b9;
+            }
+        }
+    }
+}

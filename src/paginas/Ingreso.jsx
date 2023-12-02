@@ -60,7 +60,7 @@ function Ingreso() {
                         type='texto'
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                    ></input>
+                    />
 
                     <label id='input-text'>Contraseña</label>
                     <input 
@@ -68,7 +68,7 @@ function Ingreso() {
                         type='password'
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                    ></input>
+                    />
                 </div>
                 
                 <input id='btn-login' type='submit' value='Continuar' />
