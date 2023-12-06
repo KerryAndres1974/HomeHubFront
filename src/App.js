@@ -2,7 +2,7 @@ import Proyecto from './componentes/Proyectos.jsx';
 import { useAuth } from './Auth/AuthProvider.jsx';
 import videoBg from './multimedia/videofondo.mp4';
 import { Outlet, Link, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './App.css';
 
 export function App() {
@@ -11,16 +11,61 @@ export function App() {
   const logeado = () => !!auth.login();
   const [usuario, setUsuario] = useState(null);
   const [proyecto, setProyecto] = useState([]);
+  const menuRef = useRef(null);
+  const mensajeRef = useRef(null);
   const [menuVisible, setMenuVisible] = useState(false);
+  const [bandejaVisible, setBandejaVisible] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [fase, setFase] = useState(1);
+  const [mensaje, setMensaje] = useState('');
+  const [listaMensaje, setListaMensaje] = useState([]);
 
   const deslogeado = () => {
     window.location.reload();
     setMenuVisible(false);
     auth.logout();
   };
+  
+  const handleClick = (e) => {
+    e.preventDefault();
+
+    // Obtiene el hash de la URL del enlace
+    const targetId = e.currentTarget.getAttribute('href').substring(1);
+
+    // Encuentra el elemento con el id correspondiente
+    const targetElement = document.getElementById(targetId);
+
+    if (targetElement) {
+      // Realiza el desplazamiento suave
+      targetElement.scrollIntoView({
+        behavior: 'smooth',
+      });
+    }
+  };
+  
+  const Verproyecto = (Propietario, Usuario, idProyecto) => {
+    
+    if(Propietario === Usuario){
+      goTo(`/Mis-publicaciones/Editar-inmueble/${idProyecto}`);
+    } else {
+      goTo(`/Detalles-inmueble/${idProyecto}`);
+    }
+  };
+
+  const verTextTarea = (e) => {
+    e.preventDefault();
+    console.log(mensaje);
+  }
+  
+  const toggleMenu = () => {
+    setMenuVisible(!menuVisible);
+  };
+
+  const toggleMessage = () => {
+    setBandejaVisible(!bandejaVisible);
+  }
 
   useEffect(() => {
-    // Aquí obtén tu token JWT de alguna manera (por ejemplo, desde localStorage)
     const token = localStorage.getItem('token');
 
     if (token) {
@@ -40,33 +85,44 @@ export function App() {
         console.error('Error al decodificar el token:', error);
       }
     }
+
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      if (scrollPosition > 550) { // Ajusta este valor según tus necesidades
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+
+    const handleClickOutside1 = (e) => {
+      if(menuRef.current && !menuRef.current.contains(e.target)) {
+        setMenuVisible(false);
+      }
+    };
+
+    const handleClickOutside2 = (e) => {
+      if(mensajeRef.current && !mensajeRef.current.contains(e.target)) {
+        setBandejaVisible(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside1);
+    document.addEventListener('mousedown', handleClickOutside2);
+
+    return(() => {
+      document.addEventListener('mousedown', handleClickOutside1);
+      document.addEventListener('mousedown', handleClickOutside2);
+      window.removeEventListener('scroll', handleScroll);
+    });
   }, []);
-
-  const handleClick = (e) => {
-    e.preventDefault();
-
-    // Obtiene el hash de la URL del enlace
-    const targetId = e.currentTarget.getAttribute('href').substring(1);
-
-    // Encuentra el elemento con el id correspondiente
-    const targetElement = document.getElementById(targetId);
-
-    if (targetElement) {
-      // Realiza el desplazamiento suave
-      targetElement.scrollIntoView({
-        behavior: 'smooth',
-      });
-    }
-  };
-
-  const toggleMenu = () => {
-    setMenuVisible(!menuVisible);
-  };
-
+  
   useEffect(() => {
     const cargarProyectos = async () => {
-        try {
-            const response = await fetch(`http://localhost:8000/all-proyectos-activos`);
+      try {
+        const response = await fetch('http://localhost:8000/all-proyectos-activos');
 
             if(response.ok){
                 const data = await response.json();
@@ -84,55 +140,101 @@ export function App() {
   }, []);
 
   useEffect(() => {}, [proyecto]);
-
-  const Verproyecto = (Propietario, Usuario, idProyecto) => {
-    
-    if(Propietario === Usuario){
-      goTo(`/Mis-publicaciones/Editar-inmueble/${idProyecto}`);
-    } else {
-      goTo(`/Detalles-inmueble/${idProyecto}`);
-    }
-  };
-
+  
   return (
     <div className='contenedorPrincipal'>
       
-      <header>
-        <nav className='navegador'>
-          <div className='contenedor'>
-            <div className='titulo'>Home Hub</div>
-            <ul className='menu'>
-              <li className='contenidoPestaña'><a href='#seccion1' className='pestaña' onClick={handleClick}>Inicio</a></li>
-              <li className='contenidoPestaña'><a href='#seccion2' className='pestaña' onClick={handleClick}>Nosotros</a></li>
-              <li className='contenidoPestaña'><a href='#seccion3' className='pestaña' onClick={handleClick}>Servicios</a></li>
-            </ul>
-          </div>
-          
-          {logeado() === false && <div className='contenedor'>
-            <ul className='menu'>
-              <li className='contenidoPestaña'><Link to="/Ingreso" className='pestaña' >Ingresar</Link></li>
-              <li className='contenidoPestaña'><Link to="/Registro" className='pestaña' >Registrarse</Link></li>
-            </ul>
+      <header className={scrolled ? 'changed' : ''}>
+        <div className='contenedor1'>
+          <div className='titulo'>Home Hub</div>
+          <ul className='menu'>
+            <li className='contenidoPestaña'><a href='#seccion1' className='pestaña' onClick={handleClick}>Inicio</a></li>
+            <li className='contenidoPestaña'><a href='#seccion2' className='pestaña' onClick={handleClick}>Nosotros</a></li>
+            <li className='contenidoPestaña'><a href='#seccion3' className='pestaña' onClick={handleClick}>Servicios</a></li>
+          </ul>
+        </div>
+        
+        {logeado() === false && <div className='contenedor2'>
+          <ul className='menu'>
+            <li className='contenidoPestaña'><Link to="/Ingreso" className='pestaña' >Ingresar</Link></li>
+            <li className='contenidoPestaña'><Link to="/Registro" className='pestaña' >Registrarse</Link></li>
+          </ul>
+        </div>}
+        
+        {logeado() === true && <div className='contenedorIconos'>
+          <img 
+            src={require('./multimedia/message.png')}
+            alt='mensaje'
+            className='imagenMensaje'
+            onClick={toggleMessage}
+          />
+          <img
+            src={require('./multimedia/menu.png')}
+            alt='menu'
+            className='imagenMenu'
+            onClick={toggleMenu}
+          />
           </div>}
-          
-          {logeado() === true && <div className='contenedor'>
-            <img
-              src={require('./multimedia/menu.png')}
-              alt='menu'
-              className='imagenMenu'
-              onClick={toggleMenu}
-            />
-          </div>}
-          
-        </nav>
 
-        {menuVisible && <ul className='menuVertical'>
-          <Link to="/Editar-perfil" className='pestaña'>Editar Perfil</Link>
-          <Link to="/Completar-perfil" className='pestaña'>Completar Perfil</Link>
-          <Link to="/Mis-publicaciones" className='pestaña'>Mis Publicaciones</Link>
-          <Link to="/Publicar-inmueble" className='pestaña'>Publicar Inmueble</Link>
-          <Link to="/" onClick={deslogeado} className='pestaña'>Salir</Link>
+        {menuVisible && <ul className='menuVertical' ref={menuRef}>
+          <Link to="/Editar-perfil" className='pestaña' >Editar Perfil</Link>
+          <Link to="/Completar-perfil" className='pestaña' >Completar Perfil</Link>
+          <Link to="/Mis-publicaciones" className='pestaña' >Mis Publicaciones</Link>
+          <Link to="/Publicar-inmueble" className='pestaña' >Publicar Inmueble</Link>
+          <Link to="/" onClick={deslogeado} className='pestaña' >Salir</Link>
         </ul>}
+
+        {bandejaVisible && <div className='bandejaEntrada' ref={mensajeRef}>
+          {fase === 1 && <div className='contenedorMensaje' onClick={() => {setFase(2)}}>
+            
+            <p className='imagenR'>image</p>
+            <div  className='detalleMensaje'>
+              <h1 className='nombreRemitente'>Remitente</h1>
+              <p className='mensajeR'>mensaje</p>
+            </div>
+
+          </div>}
+
+          {fase === 2 && <div className='mensajeria'>
+
+            <div className='accionRemitente'>
+              <img
+                src={require('./multimedia/regresar.png')}
+                alt='regresar'
+                className='imagenRegresar'
+                onClick={() => {setFase(1)}} />
+              <p className='fotoRemitente'>image</p>
+              <h1 className='nombreRemitente'>Remitente</h1>
+            </div>
+
+            <div className='Todosmensajes'>
+
+              <div className='elMensaje'>Estos son solo algunos ejemplos. Puedes encontrar varias 
+                herramientas en línea y comandos que generan automáticamente texto de "Lorem Ipsum" con 
+                diferentes opciones de personalización. Ajusta según tus necesidades y preferencias.
+              </div>
+
+              {listaMensaje.map((lstring, linumber) => 
+                <div className='elMensaje' key={`li_${linumber}`}>
+                  {lstring}
+                </div>)}
+              
+            </div>
+            <form className='contenedorEnvio' onSubmit={verTextTarea}>
+              <textarea
+                className='inputMensaje'
+                placeholder='Escribe un mensaje...'
+                value={mensaje}
+                onChange={(e) => {setMensaje(e.target.value)}} />
+              <input
+                type='submit'
+                value='Enviar'
+                className='btn-enviarMensaje' 
+                onClick={() => {setListaMensaje([...listaMensaje, mensaje]); setMensaje('')}}/>
+            </form>
+
+          </div>}
+        </div>}
 
         <Outlet />
       </header>
@@ -144,9 +246,9 @@ export function App() {
           <div className='contenedorApertura'> 
             <h1 className='tituloBienvenida'>{usuario ? `¡Bienvenido a Home Hub ${usuario.userId.username}!` : 
             '¡Bienvenido a Home Hub!'}</h1>
-            <p className='textoBienvenida'>Hacemos realidad tus metas 
-            inmobiliarias con profesionalismo y dedicación.<br/>¡Encuentra propiedades que se adaptan a tu 
-            estilo de vida!</p>
+            <p className='textoBienvenida'>Hacemos realidad tus metas inmobiliarias con profesionalismo 
+              y dedicación.<br/>¡Encuentra propiedades que se adaptan a tu estilo de vida!
+            </p>
           </div>
         </section>
 
@@ -161,6 +263,7 @@ export function App() {
               {usuario ? Verproyecto(proyecto.idusuario, usuario.userId.id, proyecto.id) : 
                 goTo(`/Detalles-inmueble/${proyecto.id}`)}} key={proyecto.id}>
                 <Proyecto
+                    nombre={proyecto.nombre}
                     tipo={proyecto.tipo}
                     ciudad={proyecto.ciudad}
                     precio={proyecto.precio}

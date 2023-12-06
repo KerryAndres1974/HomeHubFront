@@ -84,7 +84,7 @@ function Editarperfil() {
       
       <form className='contenedoEditarPerfil'>
 
-        <p className='tituloEditarPerfil'>Editar Perfil</p>
+        <h1 className='tituloEditarPerfil'>Editar Perfil</h1>
         <div className='contenedorInputs' onSubmit={editarDatos}>
           
           <div>

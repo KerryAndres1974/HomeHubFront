@@ -156,7 +156,7 @@ function Completarperfil() {
 
       <section className='contenedorCompletarPerfil'>
         
-        <p className='textoCompletar'>Completar mi Perfil</p>
+        <h1 className='textoCompletar'>Completar mi Perfil</h1>
 
         <button className='fotoPerfil' onClick={añadirFoto} >
           {selectedImage || fotoPerfil ? (<img src={selectedImage || fotoPerfil} alt='imagenV' className='fotoPerfil'/>) : 

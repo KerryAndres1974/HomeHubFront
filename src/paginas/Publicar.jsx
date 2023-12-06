@@ -9,6 +9,7 @@ function Mispublicaiones() {
   const [direccion, setDireccion] = useState({campo: '', valido: null});
   const [nombre, setNombre] = useState({campo: '', valido: null});
   const [precio, setPrecio] = useState({campo: '', valido: null});
+  const [formularioValido, setFormularioValido] = useState(null);
   const [ciudad, setCiudad] = useState('Ciudad');
   const [tipo, setTipo] = useState('Tipo');
   const añadirFoto = useRef(null);
@@ -20,12 +21,9 @@ function Mispublicaiones() {
   const [mensajeError, setMensajeError] = useState(null);
   
   const expresiones = {
-    precio: /^[0-9]+$/, //precios monetarios
-    direccion: /^[a-zA-ZÀ-ÿ0-9\s#-]{1,40}$/, //letras, numeros, # y -
+    precio: /^\d{1,3}(,\d{3})/, //precios monetarios
+    direccion: /^[a-zA-ZÀ-ÿ0-9\s#-]{1,100}$/, //letras, numeros, # y -
     credenciales: /^[a-zA-ZÀ-ÿ\s]{1,40}$/, // letras mayus y minus
-    correo: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
-    telefono: /^\d{10,10}$/, // si o si 10 numeros
-    contraseña: /^.{4,12}$/, // de 4 a 12 caracteres
   };
 
   const handleFileChange = (e) => {
@@ -144,14 +142,7 @@ function Mispublicaiones() {
 
       });
     } else {
-      Swal.fire({
-        icon: "error",
-        title: "Algo salio mal...",
-        text: "Debes rellenar todos los campos",
-        showConfirmButton: false,
-        allowOutsideClick: true,
-        allowEnterKey: true,
-      });
+      setFormularioValido(false);
     }
   };
 
@@ -159,10 +150,6 @@ function Mispublicaiones() {
     <div className='paginaPublicar'>
 
       <section className='contenedorPublicar'>
-
-        <div className='contenedorBotenes'>
-
-        </div>
 
         <div className='contenedorImagenesPublicacion'>
           {selectedImages.map((image, index) => 
@@ -174,7 +161,7 @@ function Mispublicaiones() {
         
         <form className='contenedorFormulario' onSubmit={publicarInmueble}>
           
-          <p className='textoPublicar'>Publica tu propiedad en Home Hub!</p>
+          <h1 className='textoPublicar'>Publica tu propiedad en Home Hub!</h1>
           <div className='contendedor-inputs'>
             <Inputs
               estado={nombre}
@@ -190,7 +177,7 @@ function Mispublicaiones() {
               cambiarEstado={setDireccion}
               tipo='text'
               texto='Barrio/direccion'
-              error='Campo invalido'
+              error='Ingresa una direccion valida'
               expresionRegular={expresiones.direccion}
               valido={direccion.valido}
             />
@@ -228,7 +215,7 @@ function Mispublicaiones() {
               cambiarEstado={setPrecio}
               tipo='text'
               texto='Precio'
-              error='Campo invalido'
+              error='Ingrese un valor valido, por ejemplo: 100,000'
               expresionRegular={expresiones.precio}
               valido={precio.valido}
             />
@@ -244,6 +231,8 @@ function Mispublicaiones() {
             ref={(input) => (añadirFoto.current = input)} />
 
           <input className='btn-publicar' type='submit' value='Publicar' />
+
+          {formularioValido === false && <div id='mensajeError'><p>Debes llenar todos los campos</p></div>}
 
         </form>
 

@@ -15,9 +15,11 @@ function Proyectos(props) {
             />
             <div className='contenedorTextoPropiedad'>
                 <p className='recuadro'></p>
-                <p className='tituloPropiedad'>Se vende {props.tipo} en {props.ciudad}</p>
-                <p className='textosPropiedad'>Ubicada en {props.direccion}, {props.descripcion}</p>
-                <p className='precioPropiedad'>$ {props.precio}</p>
+                <p className='tituloPropiedad'>{props.nombre}</p>
+                <p className='textosPropiedad'>
+                Se vende {props.tipo} en {props.ciudad}. 
+                Ubicada en {props.direccion}, {props.descripcion}</p>
+                <p className='precioPropiedad'>{props.precio}$</p>
             </div>
         </div>
     );

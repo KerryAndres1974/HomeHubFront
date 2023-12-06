@@ -5,7 +5,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    background: #fff;
+    background: #f5f6f7;
     border: 1px solid #2c3e50;
     border-radius: 20px;
 
@@ -64,7 +64,6 @@
     .recuadro {
         border: 1px solid #888;
         position: absolute;
-        border-radius: 10px;
         z-index: 1;
         width: 320px;
         height: 230px;

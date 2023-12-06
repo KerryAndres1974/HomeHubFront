@@ -3,6 +3,7 @@ import { useAuth } from '../Auth/AuthProvider.jsx';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import '../hojasEstilos/Registro.css';
 import { useState } from 'react';
+import Swal from 'sweetalert2';
 
 function Registro() {      
     const [usuario, cambiarUsuario] = useState({campo: '', valido: null});
@@ -12,7 +13,6 @@ function Registro() {
     const [correo, cambiarCorreo] = useState({campo: '', valido: null});
     const [telefono, cambiarTelefono] = useState({campo: '', valido: null});
     const [terminos, cambiarTerminos] = useState(false);
-    const [formularioValido, cambiarFormulario] = useState(null);
     const [variable, cambiarVariable] = useState(null);
     const goTo = useNavigate();
     const auth = useAuth();
@@ -43,7 +43,7 @@ function Registro() {
         cambiarTerminos(e.target.checked);
     }
 
-    const onSubmits = (e) => {
+    const Registrarme = (e) => {
         e.preventDefault();
         
         if(usuario.valido === 'true' &&
@@ -82,22 +82,27 @@ function Registro() {
             .catch(error => {
                 // Manejar errores de la solicitud aquí
                 console.error('Error en la solicitud:', error);
-                cambiarFormulario(true)
-                cambiarVariable(false)
+                cambiarVariable(false);
             });
 
         } else {
-            console.error("adios")
-            cambiarFormulario(false);
+            Swal.fire({
+                icon: "error",
+                title: "Algo salio mal...",
+                text: "Debes rellenar todos los campos",
+                showConfirmButton: true,
+                allowOutsideClick: true,
+                allowEnterKey: true,
+            });
         }
     }
 
     return(
-        <div id='principal-registro'>
-            <form id='contenedor-registro' action='' onSubmit={onSubmits}>
+        <div className='principal-registro'>
+            <form className='contenedor-registro' action='' onSubmit={Registrarme}>
                 
-                <p id='titulo-registro'>Registrate</p>
-                <div id='contenedor-inputs'>
+                <h1 className='titulo-registro'>Registrate</h1>
+                <div className='contenedor-inputs'>
                     <Inputs
                         estado={usuario}
                         cambiarEstado={cambiarUsuario}
@@ -154,32 +159,22 @@ function Registro() {
                     />
                 </div>
                 
-                <label id='terminos'>
-                    <input id='terminos'
-                        type='checkbox'
+                <label className='terminos'>
+                    <input type='checkbox'
                         checked={terminos}
-                        onChange={onChangeTerminos}
-                    />
+                        onChange={onChangeTerminos}/>
                     Acepto los Terminos y Condiciones
                 </label>
                 
-                <input className='btn-registro' type='submit' value='Publicar' />
-                
-                {formularioValido === false && <div id='mensajeError'>
-                    <p><b>Error: </b>Por favor completa el formulario correctamente</p>
-                </div>}
+                <input className='btn-registro' type='submit' value='Aceptar' />
 
                 {variable === false && <div id='mensajeError'>
                     <p><b>Error: </b>Esta dirección de correo electrónico ya está en uso</p>
                 </div>}
 
-                <div id='contenedor-final2'>
-                    <nav>
-                        <ul>
-                            <li id='pregunta-login'>Ya tienes cuenta?
-                            <Link to="/Ingreso" id='pestaña2' >Iniciar Sesión</Link></li>
-                        </ul>
-                    </nav>
+                <div className='contenedor-final'>
+                    <li className='pregunta-login'>Ya tienes cuenta?</li>
+                    <Link to="/Ingreso" className='pestaña' >Iniciar Sesión</Link>
                 </div>
 
             </form>

@@ -10,6 +10,7 @@ export function Editarproyecto() {
     const [direccion, setDireccion] = useState({campo: '', valido: null});
     const [nombre, setNombre] = useState({campo: '', valido: null});
     const [precio, setPrecio] = useState({campo: '', valido: null});
+    const [formularioValido, setFormularioValido] = useState(null);
     const [ciudad, setCiudad] = useState('Ciudad');
     const [tipo, setTipo] = useState('Tipo');
     const { idProyecto } = useParams();
@@ -17,12 +18,9 @@ export function Editarproyecto() {
     const goTo = useNavigate();
 
     const expresiones = {
-        precio: /^[0-9]+$/, //precios monetarios
+        precio: /^\d{1,3}(,\d{3})/, //precios monetarios
         direccion: /^[a-zA-ZÀ-ÿ0-9\s#-]{1,40}$/, //letras, numeros, # y -
         credenciales: /^[a-zA-ZÀ-ÿ\s]{1,40}$/, // letras mayus y minus
-        correo: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
-        telefono: /^\d{10,10}$/, // si o si 10 numeros
-        contraseña: /^.{4,12}$/, // de 4 a 12 caracteres
     }
 
     useEffect(() => {
@@ -94,28 +92,21 @@ export function Editarproyecto() {
             });
             
         } else {
-            Swal.fire({
-                icon: "error",
-                title: "Algo salio mal...",
-                text: "Debes rellenar todos los campos",
-                showConfirmButton: false,
-                allowOutsideClick: true,
-                allowEnterKey: true,
-              });
+            setFormularioValido(false);
         }
     }
 
     const elimiarPublicacion = (e) => {
         e.preventDefault();
         Swal.fire({
-        icon: "question",
-        title: "¿Seguro que quieres eliminar tu publicaion?",
-        showConfirmButton: true,
-        showCancelButton: true,
-        allowOutsideClick: false,
-        allowEnterKey: false,
-        confirmButtonText: "Aceptar",
-        cancelButtonText: "Cancelar",
+            icon: "question",
+            title: "¿Seguro que quieres eliminar tu publicaion?",
+            showConfirmButton: true,
+            showCancelButton: true,
+            allowOutsideClick: false,
+            allowEnterKey: false,
+            confirmButtonText: "Aceptar",
+            cancelButtonText: "Cancelar",
         }).then((result) => {
 
             if(result.isConfirmed) {
@@ -157,14 +148,13 @@ export function Editarproyecto() {
     };
 
     return(
-
         <div className='contenedorPrincipalEdicion'>
 
             <div className='contenedorInformacionInmueble'>
 
                 <div className="accionProyecto">
                     <Proyectos
-                        key={proyecto.id}
+                        nombre={proyecto.nombre}
                         tipo={proyecto.tipo}
                         ciudad={proyecto.ciudad}
                         precio={proyecto.precio}
@@ -194,7 +184,7 @@ export function Editarproyecto() {
                             cambiarEstado={setDireccion}
                             tipo='text'
                             texto='Barrio/direccion'
-                            error='Campo invalido'
+                            error='Ingrese una direccion valida'
                             expresionRegular={expresiones.direccion}
                             valido={direccion.valido}
                         />
@@ -231,13 +221,17 @@ export function Editarproyecto() {
                             cambiarEstado={setPrecio}
                             tipo='text'
                             texto='Precio'
-                            error='Campo invalido'
+                            error='Ingrese un valor valido, por ejemplo: 100,000'
                             expresionRegular={expresiones.precio}
                             valido={precio.valido}
                         />
                     </div>
                     
-                    <input className='btn-registro' type='submit' value='Confirmar' />
+                    <input className='btn-editar' type='submit' value='Confirmar' />
+
+                    {formularioValido === false && <div id='mensajeError'>
+                        <p>Debes llenar todos los campos</p>
+                    </div>}
 
                 </form>
             </div>

@@ -11,6 +11,7 @@ function Recuperar() {
     const [rcontra, cambiarRcontra] = useState({campo: '', valido: null});
 
     // Para mostrar errores y avanzar en los formularios
+    const [formularioValido, setFormularioValido] = useState(null);
     const [correoValido, cambiarCorreo] = useState(null);
     const [codigoValido, cambiarCodigo] = useState(null);
     const [fase, setFase] = useState(1);
@@ -136,7 +137,7 @@ function Recuperar() {
                     showConfirmButton: false,
                     allowOutsideClick: false,
                     allowEnterKey: false,
-                    timer: 5000,
+                    timer: 3000,
                     timerProgressBar: true,
                 }).then(() => {
                     goTo('/Ingreso');
@@ -156,33 +157,27 @@ function Recuperar() {
             });
 
         } else {
-            Swal.fire({
-                icon: "error",
-                title: "Algo salio mal...",
-                text: "Debes rellenar todos los campos",
-                showConfirmButton: false,
-                allowOutsideClick: true,
-                allowEnterKey: true,
-            });
+            setFormularioValido(false);
+            cambiarCodigo(null);
         }
     }
 
     return(
-        <div id='principal-recup'>
+        <div className='principal-recup'>
 
-            {fase === 1 && (<form id='contenedor-recup' onSubmit={onSubmits}>
-                <p id='texto-recup'>Recupera tu contraseña</p>
+            {fase === 1 && (<form className='contenedor-recup' onSubmit={onSubmits}>
+                <h1 className='texto-recup'>Recupera tu contraseña</h1>
 
-                <div>
-                    <label id='input-text'>Correo asociado a tu cuenta</label>
+                <div className='contenedor-inputs'>
+                    <label className='input-text'>Correo asociado a tu cuenta</label>
                     <input 
-                        id='correo' 
+                        className='correo' 
                         type='email'
                         value={correo}
                         onChange={(e) => setCorreo(e.target.value)} />
                 </div>
                 
-                <input id='btn-recup' type='submit' value='Enviar' />
+                <input className='btn-recup' type='submit' value='Enviar' />
 
                 {correoValido === false && <div id='mensaje-Error'>
                     <p><b>Error: </b>Este correo no tiene cuenta asociada</p>
@@ -190,20 +185,20 @@ function Recuperar() {
 
             </form>)}
 
-            {fase === 2 && (<form id='contenedor-recup' onSubmit={onSubmits}>
-                <p id='texto-recup'>Recupera tu contraseña</p>
+            {fase === 2 && (<form className='contenedor-recup' onSubmit={onSubmits}>
+                <h1 className='texto-recup'>Recupera tu contraseña</h1>
 
-                <div>
-                    <label id='input-text'>Codigo de verificacion</label>
+                <div className='contenedor-inputs'>
+                    <label className='input-text'>Codigo de verificacion</label>
                     <input 
-                        id='correo' 
+                        className='correo' 
                         type='text'
                         value={codigo}
                         onChange={(e) => setCodigo(e.target.value)}
                     ></input>
                 </div>
                 
-                <input id='btn-recup' type='submit' value='Enviar' />
+                <input className='btn-recup' type='submit' value='Enviar' />
 
                 {correoValido === true && <div id='mensaje-Exito'>
                     <p>El codigo de verificacion fue enviado a tu correo</p>
@@ -215,10 +210,10 @@ function Recuperar() {
 
             </form>)}
 
-            {fase === 3 && (<form id='contenedor-recup' onSubmit={onSubmits}>
-                <p id='texto-recup'>Recupera tu contraseña</p>
+            {fase === 3 && (<form className='contenedor-recup' onSubmit={onSubmits}>
+                <h1 className='texto-recup'>Recupera tu contraseña</h1>
 
-                <div>
+                <div className='contenedor-inputs'>
                     <Inputs
                         estado={usuario}
                         cambiarEstado={cambiarUsuario}
@@ -250,7 +245,7 @@ function Recuperar() {
                     />
                 </div>
                 
-                <input id='btn-recup' type='submit' value='Ingresar' />
+                <input className='btn-recup' type='submit' value='Ingresar' />
 
                 {codigoValido === true && <div id='mensaje-Exito'>
                     <p>El codigo de verificacion fue aceptado</p>
@@ -258,6 +253,10 @@ function Recuperar() {
 
                 {correoValido === false && <div id='mensajeError'>
                     <p>Usuario invalido</p>
+                </div>}
+
+                {formularioValido === false && <div id='mensajeError'>
+                    <p>Debes llenar todos los campos</p>    
                 </div>}
 
             </form>)}

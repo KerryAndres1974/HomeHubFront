@@ -2,6 +2,7 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../Auth/AuthProvider.jsx';
 import '../hojasEstilos/Ingreso.css';
 import { useState } from 'react';
+import Swal from 'sweetalert2';
 
 function Ingreso() {
     const [formularioValido, cambiarFormulario] = useState(null);
@@ -14,17 +15,17 @@ function Ingreso() {
         return <Navigate to='/Miperfil' />
     }
 
-    async function onSubmits(e) {
+    async function Ingresar(e) {
         e.preventDefault();
         
         try {
             if (username !== '' && password !== '') {
                 const response = await fetch('http://localhost:8000/login', {
                     method: 'POST',
+                    body: JSON.stringify({ email: username, password: password }),
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ email: username, password: password }),
                 });
 
                 if (!response.ok) {
@@ -42,49 +43,52 @@ function Ingreso() {
                 cambiarFormulario(false);
             }
         } catch (error) {
-            console.error('Error al iniciar sesión:', error);
-            cambiarFormulario(false);
+            Swal.fire({
+                icon: "error",
+                title: "Algo salio mal...",
+                text: error,
+                showConfirmButton: true,
+                allowOutsideClick: true,
+                allowEnterKey: true,
+            });
         }
     }
 
     return(
-        <div id='principal-login'>
+        <div className='principal-login'>
 
-            <form id='contenedor-login' onSubmit={onSubmits}>
-                <p id='texto-login'>Inicia sesión</p>
+            <form className='contenedor-login' onSubmit={Ingresar}>
 
-                <div>
-                    <label id='input-text'>Telefono, e-mail o usuario</label>
+                <h1 className='texto-login'>Inicia sesión</h1>
+                <div className='contenedor-inputs'>
+                    <label className='input-text'>Telefono, e-mail o usuario</label>
                     <input 
-                        id='usuario' 
+                        className='input' 
                         type='texto'
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                     />
 
-                    <label id='input-text'>Contraseña</label>
+                    <label className='input-text' style={{marginTop: '15px'}}>Contraseña</label>
                     <input 
-                        id='contraseña' 
+                        className='input' 
                         type='password'
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </div>
                 
-                <input id='btn-login' type='submit' value='Continuar' />
+                <input className='btn-login' type='submit' value='Continuar' />
 
                 {formularioValido === false && <div id='mensaje-Error'>
                     <p><b>Error: </b>Usuario y/o contraseña invalidos</p>
                 </div>}
 
-                <div id='contenedor-rutas'>
-                    <nav>
-                        <ul>
-                            <li><Link to='/Recuperar' id='window1'>Olvide mi contraseña</Link></li>
-                            <li><Link to='/Registro' id='window1'>Crear cuenta</Link></li>
-                        </ul>
-                    </nav>
+                <div className='contenedor-rutas'>
+                    <li><Link to='/Recuperar' className='pestaña'>Olvide mi contraseña</Link></li>
+                    <li><Link to='/Registro' className='pestaña'>Crear cuenta</Link></li>
                 </div>
+
             </form>
         </div>
     );

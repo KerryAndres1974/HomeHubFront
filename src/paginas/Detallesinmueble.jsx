@@ -171,8 +171,7 @@ function Detallesinmueble() {
                         <label className='terminos'>
                             <input type='checkbox'
                                 checked={terminos}
-                                onChange={onChangeTerminos}
-                            />
+                                onChange={onChangeTerminos}/>
                             Acepto los Terminos y Condiciones
                         </label>
                     </div>

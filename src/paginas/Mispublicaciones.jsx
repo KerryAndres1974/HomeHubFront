@@ -69,6 +69,7 @@ function Mispublicaciones() {
                         key={proyecto.id}
                         onClick={() => handleClick(proyecto.id)}>
                         <Proyecto
+                            nombre={proyecto.nombre}
                             tipo={proyecto.tipo}
                             ciudad={proyecto.ciudad}
                             precio={proyecto.precio}
