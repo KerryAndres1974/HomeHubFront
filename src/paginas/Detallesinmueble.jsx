@@ -2,22 +2,29 @@ import '../hojasEstilos/Detallesinmueble.css';
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Inputs from '../componentes/Inputs';
+import Swal from 'sweetalert2';
 
 function Detallesinmueble() {
     const { idProyecto } = useParams();
-    const [proyecto, setProyecto] = useState([])
-    const [usuario, setUsuario] = useState([])
-    const [asesoria, setAsesoria] = useState('En que podemos ayudarte?')
+    const [proyecto, setProyecto] = useState([]);
+    const [usuario, setUsuario] = useState([]);
+    const [asesoria, setAsesoria] = useState('En que podemos ayudarte?');
+    const [mensaje, setMensaje] = useState({campo: '', valido: null});
     const [nombre, setNombre] = useState({campo: '', valido: null});
     const [correo, setCorreo] = useState({campo: '', valido: null});
     const [telefono, setTelefono] = useState({campo: '', valido: null});
     const [terminos, cambiarTerminos] = useState(false);
+    const [formularioValido, setFormularioValido] = useState(null);
 
     const expresiones = {
         credenciales: /^[a-zA-ZÀ-ÿ\s]{1,40}$/, // letras mayus y minus
         correo: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
         telefono: /^\d{10,10}$/, // si o si 10 numeros
-      };
+    };
+    
+    const onChangeTerminos = (e) => {
+        cambiarTerminos(e.target.checked);
+    }
 
     useEffect(() => {
         const cargarProyectos = async () => {
@@ -59,12 +66,53 @@ function Detallesinmueble() {
 
     }, [proyecto.idusuario]);
 
-    const onChangeTerminos = (e) => {
-        cambiarTerminos(e.target.checked);
-    }
-
     const enviarDatos = (e) => {
         e.preventDefault();
+
+        if (mensaje.valido === 'true' && correo.valido === 'true' && telefono.valido === 'true' &&
+            nombre.valido === 'true' && asesoria !== 'En que podemos ayudarte?' && terminos){
+            /*let datos = {opcion: asesoria,
+                        mensaje: mensaje.campo,
+                        correo: correo.campo,
+                        telefono: telefono.campo,
+                        nombre: nombre.campo}
+            let datosJSON = JSON.stringify(datos);
+
+            fetch('http://localhost:8000/solicitud', {
+                method: 'POST',
+                body: datosJSON,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+                }
+                return response.json(); // Suponiendo que el servidor responde con JSON
+            })
+            .then(data => {
+                // Manejar la respuesta exitosa aquí
+                */Swal.fire({
+                    icon: "success",
+                    title: "Datos enviados con exito",
+                });
+                setFormularioValido(true);
+                setAsesoria('En que podemos ayudarte?');
+                setMensaje({campo: '', valido: null});
+                setCorreo({campo: '', valido: null});
+                setTelefono({campo: '', valido: null});
+                setNombre({campo: '', valido: null});
+                cambiarTerminos(false);/*
+            })
+            .catch(error => {
+                // Manejar errores de la solicitud aquí
+                console.error('Error en la solicitud:', error);
+                setFormularioValido(false);
+            });*/
+        } else {
+            setFormularioValido(false);
+        }
     }
 
     return (
@@ -133,10 +181,15 @@ function Detallesinmueble() {
                             <option>Quiero informacion general</option>
                         </select>
 
-                        <div>
-                            <label className="input-text" style={{margin: '0 0 0 29px', fontSize: '13px'}}>Mensaje</label>
-                            <input type="text" className='input' style={{margin: '0 0 0 25px'}}/>
-                        </div>
+                        <Inputs
+                            estado={mensaje}
+                            cambiarEstado={setMensaje}
+                            tipo='text'
+                            texto='Mensaje'
+                            error='Campo invalido'
+                            expresionRegular={expresiones.credenciales}
+                            valido={mensaje.valido}
+                        />
 
                         <Inputs
                             estado={correo}
@@ -177,6 +230,8 @@ function Detallesinmueble() {
                     </div>
 
                     <input type='submit' value='Enviar' className='btn-enviar' />
+
+                    {formularioValido === false && <div id='mensajeError'><p>Debes llenar todos los campos</p></div>}
 
                 </form>
 

@@ -6,11 +6,12 @@ import Editarperfil from './paginas/Editarperfil.jsx';
 import RutaProtegida from './RutasProtegidas.js';
 import Recuperar from './paginas/Recuperar.jsx';
 import Registro from './paginas/Registro.jsx';
-import Publicar from './paginas/Publicar.jsx';
+import Publicar from './paginas/Publicarinmueble.jsx';
 import Ingreso from './paginas/Ingreso.jsx';
 import ReactDOM from 'react-dom/client';
 import Editarinmueble from './paginas/Editarinmueble.jsx';
 import Detallesinmueble from './paginas/Detallesinmueble.jsx';
+import ImagenesComponent from './paginas/ConRegistro.jsx';
 import React from 'react';
 import App from './App';
 import './index.css';
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
   {
     path: '/Recuperar',
     element: <Recuperar />,
+  },
+  {
+    path: '/ver-imagenes',
+    element: <ImagenesComponent />,
   },
   {
     path: '/Detalles-inmueble/:idProyecto',

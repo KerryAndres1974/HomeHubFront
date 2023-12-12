@@ -14,6 +14,7 @@ function Completarperfil() {
   const [fotoPerfil, setFotosPerfil] = useState(null);
   const [usuario, setUsuario] = useState('');
   const addNewPhoto = useRef(null);
+  const [formularioValido, setFormularioValido] = useState(null);
 
   useEffect(() => {
     // Aquí obtén tu token JWT de alguna manera (por ejemplo, desde localStorage)
@@ -22,60 +23,25 @@ function Completarperfil() {
     if (token) {
       try {
         // Divide el token en sus partes: encabezado, carga útil y firma
-        const [, cargaUtilBase64, ] = token.split('.');
-  
+        const [, cargaUtilBase64,] = token.split('.');
+
         // Decodifica la carga útil (segunda parte del token)
-        const cargaUtilDecodificada = typeof window !== 'undefined'
-          ? window.atob(cargaUtilBase64)
-          : Buffer.from(cargaUtilBase64, 'base64').toString('binary');
-  
+        const cargaUtilDecodificada = atob(cargaUtilBase64);
+
         // Convierte la carga útil decodificada a un objeto JavaScript
-        const usuario = JSON.parse(cargaUtilDecodificada);
-  
+        const user = JSON.parse(cargaUtilDecodificada);
+            
         // Puedes establecer el usuario en el estado
-        setUsuario(usuario.userId.username);
-  
-        /*try {
-          const arrayBufferView = new Uint8Array(usuario.userId.fotoperfil.data);
-          const blob = new Blob([arrayBufferView], { type: 'image/jpg' });
-          const base64String = URL.createObjectURL(blob);
-
-          const file = new File([blob], 'image', { type: blob.type });
-          const fr = new FileReader();
-          fr.readAsDataURL(file);
-          fr.addEventListener('load', () => {
-            const res = fr.result;
-            console.log(res);
-          });
-
-          console.log(blob);
-          setFotosPerfil(base64String);
-
-          console.log(`${usuario.userId.username} tiene foto de perfil`);
-        } catch (error) {
-          console.error('Error al crear la URL de Blob:', error);
-        }*/
-
-        if (usuario.userId.fotoperfil) {
-          const arrayBufferView = new Uint8Array(usuario.userId.fotoperfil.data);
-          const base64String = btoa(String.fromCharCode(...arrayBufferView));
-          setFotosPerfil(`data:image/jpeg;base64,${base64String}`);
-        }
-  
+        setUsuario(user);  
       } catch (error) {
         console.error('Error al decodificar el token:', error);
       }
     }
   }, []);
-  
 
   const expresiones = {
-    precio: /^[0-9]+$/, //precios monetarios
-    direccion: /^[a-zA-ZÀ-ÿ0-9\s#-]{1,40}$/, //letras, numeros, # y -
-    credenciales: /^[a-zA-ZÀ-ÿ\s]{1,40}$/, // letras mayus y minus
-    correo: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
-    telefono: /^\d{10,10}$/, // si o si 10 numeros
-    contraseña: /^.{4,12}$/, // de 4 a 12 caracteres
+    credenciales: /^[a-zA-Z0-9À-ÿ\s]{1,100}$/, // letras mayus y minus
+    numeros: /^\d{1,4}$/, // de 1 a 4 digitos
   };
 
   const añadirFoto = (e) => {
@@ -95,18 +61,14 @@ function Completarperfil() {
 
   const completarDatos = (e) => {
     e.preventDefault();
-    
-    console.log(usuario);
-    console.log(descripcion.valido, experiencia.valido, realizados.valido);
 
     if(descripcion.valido === 'true' && experiencia.valido === 'true' && realizados.valido === 'true'){
 
-      fetch(`http://localhost:8000/actualiza/${usuario}`, {
+      fetch(`http://localhost:8000/completar-perfil/${usuario.id}`, {
         method: 'PUT',
         body: JSON.stringify({descripcion: descripcion.campo,
                               experiencia: experiencia.campo,
-                              proyectosrealizados: realizados.campo,
-                              fotoperfil: selectedImage }),
+                              proyectosrealizados: realizados.campo }),
         headers: {
           'Content-Type': 'application/json'
         },
@@ -119,35 +81,21 @@ function Completarperfil() {
       })
       .then(data => {
         // Manejar la respuesta exitosa aquí
+        setRealizados({campo: '', valido: null});
+        setDescripcion({campo: '', valido: null});
+        setExperiencia({campo: '', valido: null});
+        setFormularioValido(null);
         Swal.fire({
           icon: "success",
-          title: "Se actualizaron tus datos Exitosamente",
-          showConfirmButton: false,
-          allowOutsideClick: true,
-          allowEnterKey: true,
+          title: "Se completaron tus datos Exitosamente",
         });
       })
       .catch(error => {
         // Manejar errores de la solicitud aquí
-        Swal.fire({
-          icon: "error",
-          title: "Algo salio mal...",
-          text: error,
-          showConfirmButton: false,
-          allowOutsideClick: true,
-          allowEnterKey: true,
-        });
+        console.error('Error en la solicitud:', error);
       });
-      
     } else {
-      Swal.fire({
-        icon: "error",
-        title: "Algo salio mal...",
-        text: "Debes completar todos los campos",
-        showConfirmButton: false,
-        allowOutsideClick: true,
-        allowEnterKey: true,
-      });
+      setFormularioValido(false);
     }
   };
 
@@ -170,7 +118,7 @@ function Completarperfil() {
             tipo='text'
             texto='Descripción de la empresa'
             error='Campo invalido'
-            expresionRegular={expresiones.direccion}
+            expresionRegular={expresiones.credenciales}
             valido={descripcion.valido}
           />
           <Inputs
@@ -178,8 +126,8 @@ function Completarperfil() {
             cambiarEstado={setExperiencia}
             tipo='text'
             texto='Años de experiencia'
-            error='Campo invalido'
-            expresionRegular={expresiones.direccion}
+            error='Solo deben ser numeros'
+            expresionRegular={expresiones.numeros}
             valido={experiencia.valido}
             />
           <Inputs
@@ -187,8 +135,8 @@ function Completarperfil() {
             cambiarEstado={setRealizados}
             tipo='text'
             texto='Número de proyectos realizados'
-            error='Campo invalido'
-            expresionRegular={expresiones.direccion}
+            error='Solo deben ser numeros'
+            expresionRegular={expresiones.numeros}
             valido={realizados.valido}
             />
 
@@ -200,6 +148,8 @@ function Completarperfil() {
             onChange={handleFileChange} />
 
           <input className='btn-completar' type='submit' value='Confirmar'/>
+
+          {formularioValido === false && <div id='mensajeError'><p>Debes llenar todos los campos</p></div>}
           
         </form>
 

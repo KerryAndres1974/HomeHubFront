@@ -53,6 +53,7 @@ header {
         }
     
         & .imagenMensaje {
+            margin-top: 1px;
             cursor: pointer;
             width: 28px;
             height: 28px;
@@ -347,7 +348,13 @@ header {
             }
         }
     }
+}
 
+.SeccionPropiedades {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    
     & .contenedorPropiedades {
         width: 100%;
         display: flex;

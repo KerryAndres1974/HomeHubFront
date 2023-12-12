@@ -4,21 +4,21 @@ import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 
 function Editarperfil() {
-    // Para editar tu perfil
-    const [nombre, setNombre] = useState({campo: '', valido: null});
-    const [contraseña, setContraseña] = useState({campo: '', valido: null});
-    const [contraseña2, setContraseña2] = useState({campo: '', valido: null});
-    const [correo, setCorreo] = useState({campo: '', valido: null});
-    const [telefono, setTelefono] = useState({campo: '', valido: null});
-    const [usuario, setUsuario] = useState('');
+  // Para editar tu perfil
+  const [usuario, setUsuario] = useState('');
+  const [formularioValido, setFormularioValido] = useState(null);
+  const [nombre, setNombre] = useState({campo: '', valido: null});
+  const [correo, setCorreo] = useState({campo: '', valido: null});
+  const [telefono, setTelefono] = useState({campo: '', valido: null});
+  const [contraseña, setContraseña] = useState({campo: '', valido: null});
+  const [contraseña2, setContraseña2] = useState({campo: '', valido: null});
 
-    const expresiones = {
-      credenciales: /^[a-zA-ZÀ-ÿ\s]{1,40}$/, // letras mayus y minus
-      correo: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
-      telefono: /^\d{10,10}$/, // si o si 10 numeros
-      contraseña: /^.{4,12}$/, // de 4 a 12 caracteres
-    };
-
+  const expresiones = {
+    nombre: /^[a-zA-ZÀ-ÿ\s]{1,40}$/, // letras mayus y minus
+    correo: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+    telefono: /^\d{10,10}$/, // si o si 10 numeros
+    contraseña: /^.{4,12}$/, // de 4 a 12 caracteres
+  };
     
   const validarContraseña = () => {
     if(contraseña.campo.length > 0){
@@ -37,18 +37,16 @@ function Editarperfil() {
     if (token) {
       try {
         // Divide el token en sus partes: encabezado, carga útil y firma
-        const [encabezadoBase64, cargaUtilBase64, firma] = token.split('.');
-        console.log(encabezadoBase64, firma);
+        const [, cargaUtilBase64,] = token.split('.');
 
         // Decodifica la carga útil (segunda parte del token)
         const cargaUtilDecodificada = atob(cargaUtilBase64);
 
         // Convierte la carga útil decodificada a un objeto JavaScript
-        const usuario = JSON.parse(cargaUtilDecodificada);
+        const user = JSON.parse(cargaUtilDecodificada);
             
         // Puedes establecer el usuario en el estado
-        console.log(usuario);
-        setUsuario(usuario.userId.username); 
+        setUsuario(user);
       } catch (error) {
         console.error('Error al decodificar el token:', error);
       }
@@ -57,39 +55,62 @@ function Editarperfil() {
     
   const editarDatos = (e) => {
     e.preventDefault();
+    console.log(usuario.id);
     
-    if(nombre.valido === 'true' && contraseña.valido === 'true' && validarContraseña() === true && 
-        correo.valido === 'true' && telefono.valido === 'true'){
-          Swal.fire({
-            icon: "success",
-            title: "Perfil editada con exito",
-            showConfirmButton: false,
-            allowOutsideClick: true,
-            allowEnterKey: true,
+    if(nombre.valido === 'true' || contraseña.valido === 'true' || validarContraseña() === true || 
+        correo.valido === 'true' || telefono.valido === 'true'){
+          let datos = {name: nombre.campo,
+            password: contraseña.campo,
+            email: correo.campo,
+            phone: telefono.campo};
+    
+          let datosJSON = JSON.stringify(datos);
+
+          fetch(`http://localhost:8000/editar-perfil/${usuario.id}`, {
+              method: 'PUT',
+              body: datosJSON,
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+          })
+          .then(response => {
+              if (!response.ok) {
+                  throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+              }
+              return response.json(); // Suponiendo que el servidor responde con JSON
+          })
+          .then(data => {
+              // Manejar la respuesta exitosa aquí
+              setNombre({campo: '', valido: null});
+              setCorreo({campo: '', valido: null});
+              setTelefono({campo: '', valido: null});
+              setContraseña({campo: '', valido: null});
+              setContraseña2({campo: '', valido: null});
+              Swal.fire({
+                icon: "success",
+                title: "Los datos fueron editados exitosamente",
+              });
+          })
+          .catch(error => {
+              // Manejar errores de la solicitud aquí
+              console.error('Error en la solicitud:', error);
           });
     } else {
-      Swal.fire({
-        icon: "error",
-        title: "Algo salio mal...",
-        text: "Debes rellenar todos los campos",
-        showConfirmButton: false,
-        allowOutsideClick: true,
-        allowEnterKey: true,
-      });
+      setFormularioValido(false);
     }
   };
 
   return(
     <div className='paginaEditarPerfil'>
       
-      <form className='contenedoEditarPerfil'>
+      <form className='contenedoEditarPerfil' onSubmit={editarDatos}>
 
         <h1 className='tituloEditarPerfil'>Editar Perfil</h1>
-        <div className='contenedorInputs' onSubmit={editarDatos}>
+        <div className='contenedorInputs'>
           
           <div>
             <p className='labelUsuario'>Usuario</p>
-            <input className='inputUsuario' value={usuario} readOnly/>
+            <input type='text' className='inputUsuario' value={usuario ? usuario.username : ''} readOnly/>
           </div>
 
           <Inputs
@@ -98,7 +119,7 @@ function Editarperfil() {
             tipo='text'
             texto='Cambiar Nombre'
             error='campo invalido.'
-            expresionRegular={expresiones.credenciales}
+            expresionRegular={expresiones.nombre}
             valido={nombre.valido}
           />
           <Inputs
@@ -140,6 +161,8 @@ function Editarperfil() {
         </div>
         
         <input className='btn-editar' type='submit' value='Confirmar'/>
+
+        {formularioValido === false && <div id='mensajeError'><p>Debes llenar algun campo para editar</p></div>}
 
       </form>
     </div>

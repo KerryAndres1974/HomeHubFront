@@ -10,7 +10,7 @@ function Proyectos(props) {
             
             <img
                 className='imagen'
-                src={require(`../multimedia/${props.imagen}.jpg`)}
+                src={props.imagen}
                 alt='Foto propiedad'
             />
             <div className='contenedorTextoPropiedad'>

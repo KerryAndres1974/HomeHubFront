@@ -3,7 +3,6 @@ import { useAuth } from '../Auth/AuthProvider.jsx';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import '../hojasEstilos/Registro.css';
 import { useState } from 'react';
-import Swal from 'sweetalert2';
 
 function Registro() {      
     const [usuario, cambiarUsuario] = useState({campo: '', valido: null});
@@ -14,6 +13,7 @@ function Registro() {
     const [telefono, cambiarTelefono] = useState({campo: '', valido: null});
     const [terminos, cambiarTerminos] = useState(false);
     const [variable, cambiarVariable] = useState(null);
+    const [formularioValido, setFormularioValido] = useState(null);
     const goTo = useNavigate();
     const auth = useAuth();
 
@@ -86,14 +86,7 @@ function Registro() {
             });
 
         } else {
-            Swal.fire({
-                icon: "error",
-                title: "Algo salio mal...",
-                text: "Debes rellenar todos los campos",
-                showConfirmButton: true,
-                allowOutsideClick: true,
-                allowEnterKey: true,
-            });
+            setFormularioValido(false);
         }
     }
 
@@ -176,6 +169,8 @@ function Registro() {
                     <li className='pregunta-login'>Ya tienes cuenta?</li>
                     <Link to="/Ingreso" className='pestaña' >Iniciar Sesión</Link>
                 </div>
+
+                {formularioValido === false && <div id='mensajeError'><p>Debes llenar todos los campos</p></div>}
 
             </form>
         </div>

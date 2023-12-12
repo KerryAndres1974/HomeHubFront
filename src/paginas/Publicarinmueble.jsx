@@ -1,21 +1,21 @@
 import Inputs from '../componentes/Inputs.jsx';
-import '../hojasEstilos/Publicar.css';
-import { useState, useRef, useEffect } from 'react';
+import '../hojasEstilos/Publicarinmueble.css';
+import { useState, useEffect, useRef } from 'react';
 import Swal from 'sweetalert2';
 
 function Mispublicaiones() {
-  // Para publicar tu inmueble - agregar correo
+  // Para publicar tu inmueble
   const [descripcion, setDescripcion] = useState({campo: '', valido: null});
   const [direccion, setDireccion] = useState({campo: '', valido: null});
   const [nombre, setNombre] = useState({campo: '', valido: null});
   const [precio, setPrecio] = useState({campo: '', valido: null});
   const [formularioValido, setFormularioValido] = useState(null);
   const [ciudad, setCiudad] = useState('Ciudad');
-  const [tipo, setTipo] = useState('Tipo');
-  const añadirFoto = useRef(null);
   const [usuario, setUsuario] = useState('');
+  const [tipo, setTipo] = useState('Tipo');
+  const fileInputRef = useRef(null);
 
-  const [binaryImageData, setBinaryImageData] = useState([]);
+  const [guardaImagenes, setGuardaImagenes] = useState([]);
   const [selectedImages, setSelectedImages] = useState([]);
   const [cuentaImagenes, setCuentaImagenes] = useState(0);
   const [mensajeError, setMensajeError] = useState(null);
@@ -25,36 +25,7 @@ function Mispublicaiones() {
     direccion: /^[a-zA-ZÀ-ÿ0-9\s#-]{1,100}$/, //letras, numeros, # y -
     credenciales: /^[a-zA-ZÀ-ÿ\s]{1,40}$/, // letras mayus y minus
   };
-
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
   
-    if (selectedFile) {
-      if (selectedImages.length < 5) {
-        const reader = new FileReader();
-  
-        reader.onloadend = () => {
-          // `result` contendrá los datos binarios de la imagen
-          const binaryData = reader.result;
-          // Aquí puedes realizar las operaciones que desees con los datos binarios
-  
-          // Agregar la representación de bytes a tu estado o realizar otras operaciones
-          setBinaryImageData((prevData) => [...prevData, binaryData]);
-  
-          // Si necesitas mostrar la imagen en tu interfaz de usuario, puedes convertir los datos binarios a una URL
-          const imageUrl = URL.createObjectURL(selectedFile);
-          setSelectedImages((prevImages) => [...prevImages, imageUrl]);
-          setCuentaImagenes(cuentaImagenes + 1);
-        };
-  
-        // Comienza a leer el archivo como datos binarios
-        reader.readAsArrayBuffer(selectedFile);
-      } else {
-        setMensajeError(true);
-      }
-    }
-  };
-
   useEffect(() => {
     // Aquí obtén tu token JWT de alguna manera (por ejemplo, desde localStorage)
     const token = localStorage.getItem('token');
@@ -78,69 +49,112 @@ function Mispublicaiones() {
     }
   }, []);
 
-  const publicarInmueble = (e) => {
+  const handleFileChange = (e) => {
     e.preventDefault();
-    const propietario = usuario.userId.id;
-    console.log("holaa",binaryImageData);
-    console.log("adios",selectedImages);
-    // let imagen = document.querySelector('.imagenS').src
+    const archivosSeleccionados = e.dataTransfer ? e.dataTransfer.files : e.target.files;
+  
+    if (archivosSeleccionados.length > 0) {
+      if (selectedImages.length < 5) {  
+        const nuevasImagenes = Array.from(archivosSeleccionados).map(URL.createObjectURL);
+        
+        // Para ver las imagenes en un contenedor especifico
+        setSelectedImages((viejasImagenes) => [...viejasImagenes, ...nuevasImagenes]);
+
+        // Para recoger las imagenes seleccionadas por el input
+        setGuardaImagenes((viejasImagenes) => [...viejasImagenes, ...fileInputRef.current.files]);
+
+        // Limitante de imagenes
+        setCuentaImagenes((conteo) => conteo + archivosSeleccionados.length);
+
+      } else {
+        setMensajeError(true);
+      }
+    }
+  };
+
+  const publicarInmueble = async (e) => {
+    e.preventDefault();
+    const propietario = usuario.id;
+    const formDataArray = [];
 
     if(nombre.valido === 'true' && direccion.valido === 'true' && ciudad !== 'Ciudad' && 
     tipo !== 'Tipo' && descripcion.valido === 'true' && precio.valido === 'true' && selectedImages.length > 0){
+
+      for(let i=0; i < guardaImagenes.length; i++){
+        let files = guardaImagenes[i];
+        let formData = new FormData();
+
+        formData.append('file', files);
+        formData.append("upload_preset", "HomeHub");
+        formData.append("api_key", "453363773865368");
+        formData.append("timestamp", (Date.now() / 1000) | 0);
+
+        formDataArray.push(formData);
+      }
+
+      try {
+        const response = await Promise.all(formDataArray.map(formData => 
+          fetch('https://api.cloudinary.com/v1_1/dyydtpzbg/image/upload', {
+            method: 'POST',
+            body: formData
+          }).then((response) => response.json())
+        ));
+
+        const urlsArray = response.map(data => data.secure_url);
+
+        let datos = { direccion: direccion.campo,
+          descripcion: descripcion.campo,
+          ciudad: ciudad,
+          tipo: tipo,
+          precio: precio.campo,
+          nombre: nombre.campo,
+          idusuario: propietario,
+          imagen: urlsArray[0]};
+
+        let datosJSON = JSON.stringify(datos);
+
+        fetch('http://localhost:8000/crear-proyecto', {
+          method: 'POST',
+          body: datosJSON,
+          headers: {
+            'Content-Type': 'application/json'
+          },
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+          }
+          return response.json(); // Suponiendo que el servidor responde con JSON
+        })
+        .then(data => {
+          // Manejar la respuesta exitosa aquí
+          setNombre({campo: '', valido: null});
+          setDireccion({campo: '', valido: null});
+          setDescripcion({campo: '', valido: null});
+          setPrecio({campo: '', valido: null});
+          setCiudad('Ciudad');
+          setTipo('Tipo');
+          setSelectedImages([]);
+          setCuentaImagenes(0);
+          setGuardaImagenes([]);
+          setFormularioValido(null);
+          setMensajeError(null);
           
-      let datos = { direccion: direccion.campo,
-                    descripcion: descripcion.campo,
-                    ciudad: ciudad,
-                    tipo: tipo,
-                    precio: precio.campo,
-                    nombre: nombre.campo,
-                    idusuario: propietario };
-
-      let datosJSON = JSON.stringify(datos);
-
-      fetch('http://localhost:8000/crear-proyecto', {
-        method: 'POST',
-        body: datosJSON,
-        headers: {
-          'Content-Type': 'application/json'
-        },
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
-        }
-        return response.json(); // Suponiendo que el servidor responde con JSON
-      })
-      .then(data => {
-        // Manejar la respuesta exitosa aquí
-        setNombre({campo: '', valido: null});
-        setDireccion({campo: '', valido: null});
-        setDescripcion({campo: '', valido: null});
-        setPrecio({campo: '', valido: null});
-        setCiudad('Ciudad');
-        setTipo('Tipo');
-
-        Swal.fire({
-          icon: "success",
-          title: "Publicado Exitosamente",
-          showConfirmButton: false,
-          allowOutsideClick: true,
-          allowEnterKey: true,
-        });
-
-      })
-      .catch(error => {
+          Swal.fire({
+            icon: "success",
+            title: "Publicado Exitosamente",
+          });
+        })
+        .catch(error => {
         // Manejar errores de la solicitud aquí
-        Swal.fire({
-          icon: "error",
-          title: "Algo salio mal...",
-          text: error,
-          showConfirmButton: false,
-          allowOutsideClick: true,
-          allowEnterKey: true,
+        console.error('Error en la solicitud:', error);
+        setFormularioValido(false);
         });
-
-      });
+      } catch(error) {
+        console.error('Error al subir la imagene:', error);
+      }
+    } else if (selectedImages.length > 5) {
+      setMensajeError(true);
     } else {
       setFormularioValido(false);
     }
@@ -151,11 +165,20 @@ function Mispublicaiones() {
 
       <section className='contenedorPublicar'>
 
-        <div className='contenedorImagenesPublicacion'>
-          {selectedImages.map((image, index) => 
-          (<img key={index} src={image} alt={`imagen-${index}`} className='imagenS' />))}
+        <div 
+          className='contenedorImagenesPublicacion'
+          onClick={() => fileInputRef.current.click()}
+          onDragOver={handleFileChange}
+          onDrop={handleFileChange}>
+          
+          <h1 className='tituloAñadir'>Añade fotos de tu propiedad</h1>
 
-          {cuentaImagenes < 5 && <p className='imagenV'></p>}
+          <div className='contenedorImagenesSeleccionadas'>
+            {selectedImages.map((image, index) => 
+            (<img key={index} src={image} alt={`imagen-${index}`} className='imagenS' />))}
+            {cuentaImagenes < 5 && <p className='imagenV'></p>}
+          </div>
+
           {mensajeError === true && <p id='mensaje-Error'>No se puede agregar más de 5 imágenes!</p>}
         </div>
         
@@ -192,7 +215,6 @@ function Mispublicaiones() {
               <option>Jamundí</option>
             </select>
           
-          
             <select className='formularioDinamico'
              value={tipo}
              onChange={(e) => setTipo(e.target.value)}>
@@ -221,14 +243,12 @@ function Mispublicaiones() {
             />
           </div>
           
-          <div className='añadeFoto' onClick={() => añadirFoto.current.click()}>Click para añadir fotos de tu propiedad</div>
-
           <input
             type='file'
             accept='image/*'
             onChange={handleFileChange}
             style={{display: 'none'}}
-            ref={(input) => (añadirFoto.current = input)} />
+            ref={fileInputRef} multiple/>
 
           <input className='btn-publicar' type='submit' value='Publicar' />
 

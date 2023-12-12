@@ -16,35 +16,49 @@
 
     & .contenedorImagenesPublicacion{
         width: 440px;
-        height: 500px;
-        padding: 0 14px;
+        height: 550px;
         display: flex;
-        flex-wrap: wrap;
+        padding: 0 14px;
         align-items: center;
-        justify-content: space-evenly;
+        flex-direction: column;
+        justify-content: space-around;
         background: #61778a70;
         border-radius: 15px;
-    
-        & .imagenS {
-            width: 140px;
-            height: 180px;
+
+        & .tituloAñadir {
+            font-size: 1.2rem;
+            color: #001f3f;
         }
 
-        & .imagenV {
-            border: 2px dashed #fff;
-            background-image: url('../multimedia/photo.png');
-            background-position: center;
-            background-repeat: no-repeat;
-            width: 140px;
-            height: 180px;
+        & .contenedorImagenesSeleccionadas {
+            height: 80%;
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-evenly;
+
+            & .imagenS {
+                width: 140px;
+                height: 180px;
+                cursor: pointer;
+            }
+    
+            & .imagenV {
+                border: 2px dashed #fff;
+                background-image: url('../multimedia/photo.png');
+                background-position: center;
+                background-repeat: no-repeat;
+                width: 140px;
+                height: 180px;
+                cursor: pointer;
+            }
         }
     }
 
     & .contenedorFormulario {
         width: 800px;
-        height: 550px;
-        overflow: hidden;
-        transition: height 0.5s ease;
+        height: 450px;
         padding: 14px;
         display: flex;
         align-items: center;
@@ -55,7 +69,6 @@
         box-shadow: 13px 13px 13px 0 rgb(0 0 0 / 20%);
 
         & .textoPublicar{
-            text-align: center;
             font-size: 1.3rem;
             color: #001f3f;
         }
@@ -90,22 +103,6 @@
                 & option:checked {
                     background-color: #ddd;
                 }
-            }
-        }
-
-        & .añadeFoto {
-            background: #3498db;;
-            border-radius: 10px;
-            min-width: 340px;
-            min-height: 140px;
-            border: 3px dashed #000;
-            display: grid;
-            place-items: center;
-            cursor: pointer;
-            color: #fff;
-            text-size-adjust: 0.9rem;
-            &:hover{
-                background: #2980b9;
             }
         }
         

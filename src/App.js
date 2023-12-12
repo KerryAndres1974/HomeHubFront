@@ -1,7 +1,7 @@
 import Proyecto from './componentes/Proyectos.jsx';
 import { useAuth } from './Auth/AuthProvider.jsx';
 import videoBg from './multimedia/videofondo.mp4';
-import { Outlet, Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import './App.css';
 
@@ -11,15 +11,17 @@ export function App() {
   const logeado = () => !!auth.login();
   const [usuario, setUsuario] = useState(null);
   const [proyecto, setProyecto] = useState([]);
-  const menuRef = useRef(null);
-  const mensajeRef = useRef(null);
-  const [menuVisible, setMenuVisible] = useState(false);
-  const [bandejaVisible, setBandejaVisible] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [fase, setFase] = useState(1);
   const [mensaje, setMensaje] = useState('');
   const [listaMensaje, setListaMensaje] = useState([]);
-
+  
+  const mensajeRef = useRef(null);
+  const menuRef = useRef(null);
+  
+  const [bandejaVisible, setBandejaVisible] = useState(false);
+  const [menuVisible, setMenuVisible] = useState(false);
+  
   const deslogeado = () => {
     window.location.reload();
     setMenuVisible(false);
@@ -43,7 +45,7 @@ export function App() {
     }
   };
   
-  const Verproyecto = (Propietario, Usuario, idProyecto) => {
+  const editarProyecto = (Propietario, Usuario, idProyecto) => {
     
     if(Propietario === Usuario){
       goTo(`/Mis-publicaciones/Editar-inmueble/${idProyecto}`);
@@ -135,8 +137,7 @@ export function App() {
         }
     };
 
-    cargarProyectos(); // Llama a la función aquí
-
+    cargarProyectos();
   }, []);
 
   useEffect(() => {}, [proyecto]);
@@ -149,8 +150,8 @@ export function App() {
           <div className='titulo'>Home Hub</div>
           <ul className='menu'>
             <li className='contenidoPestaña'><a href='#seccion1' className='pestaña' onClick={handleClick}>Inicio</a></li>
-            <li className='contenidoPestaña'><a href='#seccion2' className='pestaña' onClick={handleClick}>Nosotros</a></li>
-            <li className='contenidoPestaña'><a href='#seccion3' className='pestaña' onClick={handleClick}>Servicios</a></li>
+            <li className='contenidoPestaña'><a href='#seccion3' className='pestaña' onClick={handleClick}>Nosotros</a></li>
+            <li className='contenidoPestaña'><a href='#seccion4' className='pestaña' onClick={handleClick}>Servicios</a></li>
           </ul>
         </div>
         
@@ -235,8 +236,6 @@ export function App() {
 
           </div>}
         </div>}
-
-        <Outlet />
       </header>
 
       <section className='SeccionHome' id='seccion1'>
@@ -244,14 +243,18 @@ export function App() {
         <section className='contenedorBienvenida'>
           <video src={videoBg} autoPlay loop muted className='videoHome'/>
           <div className='contenedorApertura'> 
-            <h1 className='tituloBienvenida'>{usuario ? `¡Bienvenido a Home Hub ${usuario.userId.username}!` : 
+            <h1 className='tituloBienvenida'>{usuario ? `¡Bienvenido a Home Hub ${usuario.username}!` : 
             '¡Bienvenido a Home Hub!'}</h1>
             <p className='textoBienvenida'>Hacemos realidad tus metas inmobiliarias con profesionalismo 
               y dedicación.<br/>¡Encuentra propiedades que se adaptan a tu estilo de vida!
             </p>
           </div>
         </section>
+        
+      </section>
 
+      <section className='SeccionPropiedades' id='seccion2'>
+      
         <section className='contenedorPropiedades'>
           <p className='lineaH' style={{margin: '20px 0 0 0'}}></p>
           <h1 className='tituloProyectos'>Proyectos para tu Familia</h1>
@@ -260,26 +263,26 @@ export function App() {
           <div className='contenedorFamiliaProyectos'>
             {proyecto.map((proyecto) => (
               <div className='contenedorXProyecto' onClick={() => 
-              {usuario ? Verproyecto(proyecto.idusuario, usuario.userId.id, proyecto.id) : 
+              {usuario ? editarProyecto(proyecto.idusuario, usuario.id, proyecto.id) : 
                 goTo(`/Detalles-inmueble/${proyecto.id}`)}} key={proyecto.id}>
                 <Proyecto
                     nombre={proyecto.nombre}
                     tipo={proyecto.tipo}
                     ciudad={proyecto.ciudad}
                     precio={proyecto.precio}
-                    imagen='casa4'
+                    imagen={proyecto.imagen}
                     direccion={proyecto.direccion}
                     descripcion={proyecto.descripcion}
-                    coincide={usuario ? (usuario.userId.id === proyecto.idusuario ? true : false) : false}
+                    coincide={usuario ? (usuario.id === proyecto.idusuario ? true : false) : false}
                 />
               </div>
             ))}
           </div>
         </section>
-        
+
       </section>
 
-      <section className='SeccionNosotros' id='seccion2'>
+      <section className='SeccionNosotros' id='seccion3'>
         
         <p className='contenidoParrafo'><h1 className='tituloParrafo' style={{margin: '0 0 5px 0'}}>Misión.</h1>
         Nuestra Misión es facilitar el acceso a hogares que reflejen 
@@ -298,7 +301,7 @@ export function App() {
         
       </section>
 
-      <section className='SeccionServicios' id='seccion3'>
+      <section className='SeccionServicios' id='seccion4'>
         
         <h1 className='tituloServicios'>Home Hub te ofrece Servicios como:</h1>
         <div className='contenedorServicios'>
