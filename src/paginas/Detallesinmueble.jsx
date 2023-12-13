@@ -7,25 +7,53 @@ import Swal from 'sweetalert2';
 function Detallesinmueble() {
     const { idProyecto } = useParams();
     const [proyecto, setProyecto] = useState([]);
-    const [usuario, setUsuario] = useState([]);
+    const [propietario, setPropietario] = useState([]);
+    const [usuario, setUsuario] = useState({});
     const [asesoria, setAsesoria] = useState('En que podemos ayudarte?');
-    const [mensaje, setMensaje] = useState({campo: '', valido: null});
     const [nombre, setNombre] = useState({campo: '', valido: null});
     const [correo, setCorreo] = useState({campo: '', valido: null});
     const [telefono, setTelefono] = useState({campo: '', valido: null});
     const [terminos, cambiarTerminos] = useState(false);
     const [formularioValido, setFormularioValido] = useState(null);
 
+    // Expresiones para formularios
     const expresiones = {
         credenciales: /^[a-zA-ZÀ-ÿ\s]{1,40}$/, // letras mayus y minus
         correo: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
         telefono: /^\d{10,10}$/, // si o si 10 numeros
-    };
-    
-    const onChangeTerminos = (e) => {
-        cambiarTerminos(e.target.checked);
+    };    
+
+    // Muestra los datos del vendedor
+    const handleClick = () => {
+        console.log(propietario);
+        window.open(`https://wa.me/${propietario.phone}?text=${asesoria}`);
     }
 
+    // Obtiene el token
+    useEffect(() => {
+        // Aquí obtén tu token JWT de alguna manera (por ejemplo, desde localStorage)
+        const token = localStorage.getItem('token');
+
+    if (token) {
+        try {
+            // Divide el token en sus partes: encabezado, carga útil y firma
+            const [, cargaUtilBase64, ] = token.split('.');
+
+            // Decodifica la carga útil (segunda parte del token)
+            const cargaUtilDecodificada = atob(cargaUtilBase64);
+
+            // Convierte la carga útil decodificada a un objeto JavaScript
+            const usuario = JSON.parse(cargaUtilDecodificada);
+
+            // Puedes establecer el usuario en el estado
+            setUsuario(usuario);
+        } catch (error) {
+            console.error('Error al decodificar el token:', error);
+        }
+    }
+}, []);
+
+    // Obtiene el proyecto y despues info del propietario
     useEffect(() => {
         const cargarProyectos = async () => {
             try {
@@ -33,6 +61,21 @@ function Detallesinmueble() {
     
                 if(response.ok){
                     const data = await response.json();
+
+                    try {
+                        const response = await fetch(`http://localhost:8000/cargar-usuario/${data[0].idusuario}`);
+            
+                        if(response.ok){
+                            const dato = await response.json();
+                            setPropietario(dato[0]);
+                        } else {
+                            console.error('Error al obtener al usuario:', response.statusText);
+                        }
+
+                    } catch (error) {
+                        console.error('Error al realizar la petición:', error);
+                    }
+
                     setProyecto(data[0]);
                 } else {
                     console.error('Error al obtener los proyectos:', response.statusText);
@@ -46,39 +89,21 @@ function Detallesinmueble() {
     
     }, [idProyecto]);
 
-    useEffect(() => {
-        const cargarUsuario = async () => {
-            try {
-                const response = await fetch(`http://localhost:8000/cargar-usuario/${proyecto.idusuario}`);
-    
-                if(response.ok){
-                    const data = await response.json();
-                    setUsuario(data[0]);
-                } else {
-                    console.error('Error al obtener al usuario:', response.statusText);
-                }
-            } catch (error) {
-                console.error('Error al realizar la petición:', error);
-            }
-        };
-
-        cargarUsuario();
-
-    }, [proyecto.idusuario]);
-
+    // Envia la petición al backend para guardar una asesoria
     const enviarDatos = (e) => {
         e.preventDefault();
 
-        if (mensaje.valido === 'true' && correo.valido === 'true' && telefono.valido === 'true' &&
-            nombre.valido === 'true' && asesoria !== 'En que podemos ayudarte?' && terminos){
-            /*let datos = {opcion: asesoria,
-                        mensaje: mensaje.campo,
+        if (correo.valido === 'true' && telefono.valido === 'true' && terminos && 
+            nombre.valido === 'true' && asesoria !== 'En que podemos ayudarte?'){
+            let datos = {mensaje: asesoria,
+                        destinatario: propietario.id,
+                        remitente: (usuario ? usuario.id : null),
                         correo: correo.campo,
                         telefono: telefono.campo,
                         nombre: nombre.campo}
             let datosJSON = JSON.stringify(datos);
 
-            fetch('http://localhost:8000/solicitud', {
+            fetch('http://localhost:8000/asignar-asesoria', {
                 method: 'POST',
                 body: datosJSON,
                 headers: {
@@ -93,23 +118,21 @@ function Detallesinmueble() {
             })
             .then(data => {
                 // Manejar la respuesta exitosa aquí
-                */Swal.fire({
+                Swal.fire({
                     icon: "success",
                     title: "Datos enviados con exito",
                 });
-                setFormularioValido(true);
                 setAsesoria('En que podemos ayudarte?');
-                setMensaje({campo: '', valido: null});
                 setCorreo({campo: '', valido: null});
                 setTelefono({campo: '', valido: null});
                 setNombre({campo: '', valido: null});
-                cambiarTerminos(false);/*
+                cambiarTerminos(false);
             })
             .catch(error => {
                 // Manejar errores de la solicitud aquí
                 console.error('Error en la solicitud:', error);
                 setFormularioValido(false);
-            });*/
+            });
         } else {
             setFormularioValido(false);
         }
@@ -130,14 +153,16 @@ function Detallesinmueble() {
                         </div>
                         <div className='addD'>
                             <p>{proyecto.direccion}, {proyecto.ciudad}, Valle del Cauca</p>
-                            <p>{usuario.phone}</p>
-                            <p>{usuario.email}</p>
+                            <p>{propietario.phone}</p>
+                            <p>{propietario.email}</p>
                         </div>
                     </div>
                 </div>
 
                 <div className="caracteristicas">
-                    <h1 className='textoZonas'>Zonas Comunes</h1>
+                    <h1 className='textoZonas'>Zonas Comunes
+                        <button className='btn-vendedor' onClick={handleClick}>Ver datos del vendedor</button>
+                    </h1>
                     <div className='zonasComunes'>
                         
                         <div>
@@ -182,16 +207,6 @@ function Detallesinmueble() {
                         </select>
 
                         <Inputs
-                            estado={mensaje}
-                            cambiarEstado={setMensaje}
-                            tipo='text'
-                            texto='Mensaje'
-                            error='Campo invalido'
-                            expresionRegular={expresiones.credenciales}
-                            valido={mensaje.valido}
-                        />
-
-                        <Inputs
                             estado={correo}
                             cambiarEstado={setCorreo}
                             tipo='email'
@@ -224,7 +239,7 @@ function Detallesinmueble() {
                         <label className='terminos'>
                             <input type='checkbox'
                                 checked={terminos}
-                                onChange={onChangeTerminos}/>
+                                onChange={(e) => {cambiarTerminos(e.target.checked);}}/>
                             Acepto los Terminos y Condiciones
                         </label>
                     </div>

@@ -20,12 +20,14 @@ function Mispublicaiones() {
   const [cuentaImagenes, setCuentaImagenes] = useState(0);
   const [mensajeError, setMensajeError] = useState(null);
   
+  // Expresiones para formularios
   const expresiones = {
     precio: /^\d{1,3}(,\d{3})/, //precios monetarios
     direccion: /^[a-zA-ZÀ-ÿ0-9\s#-]{1,100}$/, //letras, numeros, # y -
     credenciales: /^[a-zA-ZÀ-ÿ\s]{1,40}$/, // letras mayus y minus
   };
   
+  // Obtiene el token
   useEffect(() => {
     // Aquí obtén tu token JWT de alguna manera (por ejemplo, desde localStorage)
     const token = localStorage.getItem('token');
@@ -49,6 +51,7 @@ function Mispublicaiones() {
     }
   }, []);
 
+  // Mostrar imagenes en un contenedor
   const handleFileChange = (e) => {
     e.preventDefault();
     const archivosSeleccionados = e.dataTransfer ? e.dataTransfer.files : e.target.files;
@@ -58,10 +61,10 @@ function Mispublicaiones() {
         const nuevasImagenes = Array.from(archivosSeleccionados).map(URL.createObjectURL);
         
         // Para ver las imagenes en un contenedor especifico
-        setSelectedImages((viejasImagenes) => [...viejasImagenes, ...nuevasImagenes]);
+        setSelectedImages((viejasImagenes) => [...viejasImagenes, nuevasImagenes]);
 
         // Para recoger las imagenes seleccionadas por el input
-        setGuardaImagenes((viejasImagenes) => [...viejasImagenes, ...fileInputRef.current.files]);
+        setGuardaImagenes((viejasImagenes) => [...viejasImagenes, fileInputRef.current.files]);
 
         // Limitante de imagenes
         setCuentaImagenes((conteo) => conteo + archivosSeleccionados.length);
@@ -72,6 +75,7 @@ function Mispublicaiones() {
     }
   };
 
+  // Envia la peticion al backend para publicar el inmueble
   const publicarInmueble = async (e) => {
     e.preventDefault();
     const propietario = usuario.id;
@@ -128,17 +132,17 @@ function Mispublicaiones() {
         })
         .then(data => {
           // Manejar la respuesta exitosa aquí
-          setNombre({campo: '', valido: null});
-          setDireccion({campo: '', valido: null});
           setDescripcion({campo: '', valido: null});
+          setDireccion({campo: '', valido: null});
+          setNombre({campo: '', valido: null});
           setPrecio({campo: '', valido: null});
           setCiudad('Ciudad');
           setTipo('Tipo');
-          setSelectedImages([]);
           setCuentaImagenes(0);
+          setSelectedImages([]);
           setGuardaImagenes([]);
-          setFormularioValido(null);
           setMensajeError(null);
+          setFormularioValido(null);
           
           Swal.fire({
             icon: "success",

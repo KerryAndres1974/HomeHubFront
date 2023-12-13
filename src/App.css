@@ -140,14 +140,13 @@ header {
     flex-direction: column;
     height: 90vh;
     width: 300px;
-    justify-content: space-between;
     overflow: hidden;
     box-shadow: -5px 0 5px rgba(0, 0, 0, 0.3);
 
     & .contenedorMensaje {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: center;
         width: 100%;
         min-height: 60px;
         color: #2c3e50;
@@ -168,7 +167,7 @@ header {
         }
 
         & .detalleMensaje {
-            width: 80%;
+            width: 90%;
             height: 100%;
             display: flex;
             flex-direction: column;
@@ -346,6 +345,21 @@ header {
                 text-align: center;
                 font-family: Roboto, sans-serif;
             }
+        }
+
+        & .btn-botones {
+            height: 80px;
+            width: 900px;
+            border-radius: 50px;
+            background: #2c3e50;
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            bottom: -45px;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
         }
     }
 }

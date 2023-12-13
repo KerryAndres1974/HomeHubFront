@@ -39,10 +39,6 @@ function Registro() {
         }
     }
 
-    const onChangeTerminos = (e) => {
-        cambiarTerminos(e.target.checked);
-    }
-
     const Registrarme = (e) => {
         e.preventDefault();
         
@@ -155,7 +151,7 @@ function Registro() {
                 <label className='terminos'>
                     <input type='checkbox'
                         checked={terminos}
-                        onChange={onChangeTerminos}/>
+                        onChange={(e) => {cambiarTerminos(e.target.checked)}}/>
                     Acepto los Terminos y Condiciones
                 </label>
                 

@@ -9,9 +9,28 @@
     animation: desplazamiento 30s linear infinite;
 }
 
+.tituloPropietario {
+    font-size: 1.6rem;
+}
+
+.btn-proyectos {
+    font-family: Roboto, sans-serif;
+    width: 180px;
+    height: 35px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    color: #fff;
+    background: rgb(46, 196, 0);
+    transition: all 0.3s ease;
+    &:hover {
+        background: rgb(52, 224, 0);
+    }
+}
+
 .contenedorPublicaciones {
     width: 100%;
-    height: 600px;
+    height: 550px;
     display: flex;
     flex-wrap: wrap;
     align-items: center;

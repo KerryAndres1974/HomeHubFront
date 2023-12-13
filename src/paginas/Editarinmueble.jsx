@@ -17,12 +17,14 @@ export function Editarproyecto() {
     const [proyecto, setProyecto] = useState([])
     const goTo = useNavigate();
 
+    // Expresiones para formularios
     const expresiones = {
         precio: /^\d{1,3}(,\d{3})/, //precios monetarios
         direccion: /^[a-zA-ZÀ-ÿ0-9\s#-]{1,40}$/, //letras, numeros, # y -
         credenciales: /^[a-zA-ZÀ-ÿ\s]{1,40}$/, // letras mayus y minus
     }
 
+    // Obtiene el proyecto
     useEffect(() => {
         const cargarProyectos = async () => {
             try {
@@ -43,22 +45,23 @@ export function Editarproyecto() {
     
     }, [idProyecto]);
 
+    // Envia la peticion al backend para actualizar el proyecto
     const actualizaProyecto = (e) => {
         e.preventDefault();
         
-        if (nombre.valido === 'true' && direccion.valido === 'true' &&
-            ciudad !== 'Ciudad' && tipo !== 'Tipo' && precio.valido === 'true' && 
+        if (nombre.valido === 'true' || direccion.valido === 'true' ||
+            ciudad !== 'Ciudad' || tipo !== 'Tipo' || precio.valido === 'true' || 
             descripcion.valido === 'true') {
             
-            fetch(`http://localhost:8000/actualiza-proyecto/${idProyecto}`, {
+            fetch(`http://localhost:8000/editar-proyecto/${idProyecto}`, {
                 method: 'PUT',
                 body: JSON.stringify({descripcion: descripcion.campo,
-                                        ciudad: ciudad,
-                                        tipo: tipo, 
-                                        precio: precio.campo,
-                                        nombre: nombre.campo,
-                                        direccion: direccion.campo,
-                                        idproyecto: idProyecto}),
+                    ciudad: ciudad,
+                    tipo: tipo, 
+                    precio: precio.campo,
+                    nombre: nombre.campo,
+                    direccion: direccion.campo,
+                    idproyecto: idProyecto}),
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -73,10 +76,7 @@ export function Editarproyecto() {
                 // Manejar la respuesta exitosa aquí
                 Swal.fire({
                     icon: "success",
-                    title: "Se guardaron los cambios Exitosamente",
-                    showConfirmButton: false,
-                    allowOutsideClick: true,
-                    allowEnterKey: true,
+                    title: "Se guardaron los cambios Exitosamente"
                 });
             })
             .catch(error => {
@@ -84,10 +84,7 @@ export function Editarproyecto() {
                 Swal.fire({
                     icon: "error",
                     title: "Algo salio mal...",
-                    text: error,
-                    showConfirmButton: false,
-                    allowOutsideClick: true,
-                    allowEnterKey: true,
+                    text: error
                   });
             });
             
@@ -96,6 +93,7 @@ export function Editarproyecto() {
         }
     }
 
+    // Envia la peticion al backend para borrar el proyecto
     const elimiarPublicacion = (e) => {
         e.preventDefault();
         Swal.fire({
@@ -137,10 +135,7 @@ export function Editarproyecto() {
                     Swal.fire({
                         icon: "error",
                         title: "Algo salio mal...",
-                        text: error,
-                        showConfirmButton: false,
-                        allowOutsideClick: true,
-                        allowEnterKey: true,
+                        text: error
                       });
                 });
             }
@@ -158,7 +153,7 @@ export function Editarproyecto() {
                         tipo={proyecto.tipo}
                         ciudad={proyecto.ciudad}
                         precio={proyecto.precio}
-                        imagen='casa3'
+                        imagen={proyecto.imagen}
                         direccion={proyecto.direccion}
                         descripcion={proyecto.descripcion}
                         coincide={null}

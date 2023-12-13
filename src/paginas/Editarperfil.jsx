@@ -13,13 +13,15 @@ function Editarperfil() {
   const [contraseña, setContraseña] = useState({campo: '', valido: null});
   const [contraseña2, setContraseña2] = useState({campo: '', valido: null});
 
+  // Expresiones para formularios
   const expresiones = {
     nombre: /^[a-zA-ZÀ-ÿ\s]{1,40}$/, // letras mayus y minus
     correo: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
     telefono: /^\d{10,10}$/, // si o si 10 numeros
     contraseña: /^.{4,12}$/, // de 4 a 12 caracteres
   };
-    
+  
+  // Validar contraseña
   const validarContraseña = () => {
     if(contraseña.campo.length > 0){
       if(contraseña.campo !== contraseña2.campo){
@@ -30,6 +32,7 @@ function Editarperfil() {
     }
   };
 
+  // Obtiene el token
   useEffect(() => {
     // Aquí obtén tu token JWT de alguna manera (por ejemplo, desde localStorage)
     const token = localStorage.getItem('token');
@@ -52,23 +55,20 @@ function Editarperfil() {
       }
     }
   }, []);
-    
+  
+  // Envia la peticion al backend para editar los datos
   const editarDatos = (e) => {
     e.preventDefault();
-    console.log(usuario.id);
     
-    if(nombre.valido === 'true' || contraseña.valido === 'true' || validarContraseña() === true || 
+    if(nombre.valido === 'true' || (contraseña.valido === 'true' && validarContraseña() === true) || 
         correo.valido === 'true' || telefono.valido === 'true'){
-          let datos = {name: nombre.campo,
-            password: contraseña.campo,
-            email: correo.campo,
-            phone: telefono.campo};
-    
-          let datosJSON = JSON.stringify(datos);
 
           fetch(`http://localhost:8000/editar-perfil/${usuario.id}`, {
               method: 'PUT',
-              body: datosJSON,
+              body: JSON.stringify({name: nombre.campo,
+                password: contraseña.campo,
+                email: correo.campo,
+                phone: telefono.campo}),
               headers: {
                   'Content-Type': 'application/json'
               },

@@ -15,6 +15,7 @@ export function App() {
   const [fase, setFase] = useState(1);
   const [mensaje, setMensaje] = useState('');
   const [listaMensaje, setListaMensaje] = useState([]);
+  const [listaCorreo, setListaCorreo] = useState([]);
   
   const mensajeRef = useRef(null);
   const menuRef = useRef(null);
@@ -53,11 +54,6 @@ export function App() {
       goTo(`/Detalles-inmueble/${idProyecto}`);
     }
   };
-
-  const verTextTarea = (e) => {
-    e.preventDefault();
-    console.log(mensaje);
-  }
   
   const toggleMenu = () => {
     setMenuVisible(!menuVisible);
@@ -65,6 +61,21 @@ export function App() {
 
   const toggleMessage = () => {
     setBandejaVisible(!bandejaVisible);
+    const cargarMensajes = async () => {
+      try {
+        const response = await fetch(`http://localhost:8000/obtener-asesorias/${usuario.id}`);
+
+            if(response.ok){
+                const data = await response.json();
+                setListaCorreo(data);
+            } else {
+                console.error('Error al obtener los correos:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error al realizar la petición:', error);
+        }
+    };
+    cargarMensajes();
   }
 
   useEffect(() => {
@@ -88,6 +99,7 @@ export function App() {
       }
     }
 
+    // Ajustes del encabezado
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
       if (scrollPosition > 550) { // Ajusta este valor según tus necesidades
@@ -96,9 +108,9 @@ export function App() {
         setScrolled(false);
       }
     };
-    
     window.addEventListener('scroll', handleScroll);
 
+    // Abre y cierra la bandeja de mensajes y opciones
     const handleClickOutside1 = (e) => {
       if(menuRef.current && !menuRef.current.contains(e.target)) {
         setMenuVisible(false);
@@ -136,8 +148,8 @@ export function App() {
             console.error('Error al realizar la petición:', error);
         }
     };
-
     cargarProyectos();
+
   }, []);
 
   useEffect(() => {}, [proyecto]);
@@ -186,15 +198,15 @@ export function App() {
         </ul>}
 
         {bandejaVisible && <div className='bandejaEntrada' ref={mensajeRef}>
-          {fase === 1 && <div className='contenedorMensaje' onClick={() => {setFase(2)}}>
-            
-            <p className='imagenR'>image</p>
-            <div  className='detalleMensaje'>
-              <h1 className='nombreRemitente'>Remitente</h1>
-              <p className='mensajeR'>mensaje</p>
-            </div>
 
-          </div>}
+          {listaCorreo.map((mensaje) => (
+            fase === 1 && <div className='contenedorMensaje' key={mensaje.id} onClick={() => {setFase(2)}}>
+              <div className='detalleMensaje'>
+                <h1 className='nombreRemitente'>{mensaje.nombreremi}</h1>
+                <p className='mensajeR'>{mensaje.mensaje}</p>  
+              </div>
+            </div>
+          ))}
 
           {fase === 2 && <div className='mensajeria'>
 
@@ -204,6 +216,7 @@ export function App() {
                 alt='regresar'
                 className='imagenRegresar'
                 onClick={() => {setFase(1)}} />
+                
               <p className='fotoRemitente'>image</p>
               <h1 className='nombreRemitente'>Remitente</h1>
             </div>
@@ -221,7 +234,7 @@ export function App() {
                 </div>)}
               
             </div>
-            <form className='contenedorEnvio' onSubmit={verTextTarea}>
+            <form className='contenedorEnvio' onSubmit={(e) => {e.preventDefault()}}>
               <textarea
                 className='inputMensaje'
                 placeholder='Escribe un mensaje...'
@@ -249,6 +262,24 @@ export function App() {
               y dedicación.<br/>¡Encuentra propiedades que se adaptan a tu estilo de vida!
             </p>
           </div>
+
+          {/*<div className='btn-botones'>
+            <input type='text' placeholder='Buscar x Nombre'/>
+
+            <select value='Ciudad'>
+              <option disabled >Ciudad</option>
+              <option>Cali</option>
+              <option>Buga</option>
+              <option>Tuluá</option>
+              <option>Jamundí</option>
+            </select>
+
+            <select value='Tipo'>
+              <option disabled >Tipo</option>
+              <option>Casa</option>
+              <option>Apartamento</option>
+            </select>
+          </div>*/}
         </section>
         
       </section>

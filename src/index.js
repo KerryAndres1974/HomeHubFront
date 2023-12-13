@@ -11,7 +11,6 @@ import Ingreso from './paginas/Ingreso.jsx';
 import ReactDOM from 'react-dom/client';
 import Editarinmueble from './paginas/Editarinmueble.jsx';
 import Detallesinmueble from './paginas/Detallesinmueble.jsx';
-import ImagenesComponent from './paginas/ConRegistro.jsx';
 import React from 'react';
 import App from './App';
 import './index.css';
@@ -32,10 +31,6 @@ const router = createBrowserRouter([
   {
     path: '/Recuperar',
     element: <Recuperar />,
-  },
-  {
-    path: '/ver-imagenes',
-    element: <ImagenesComponent />,
   },
   {
     path: '/Detalles-inmueble/:idProyecto',
