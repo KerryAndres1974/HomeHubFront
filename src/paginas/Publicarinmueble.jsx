@@ -61,10 +61,10 @@ function Mispublicaiones() {
         const nuevasImagenes = Array.from(archivosSeleccionados).map(URL.createObjectURL);
         
         // Para ver las imagenes en un contenedor especifico
-        setSelectedImages((viejasImagenes) => [...viejasImagenes, nuevasImagenes]);
+        setSelectedImages((viejasImagenes) => [...viejasImagenes, ...nuevasImagenes]);
 
         // Para recoger las imagenes seleccionadas por el input
-        setGuardaImagenes((viejasImagenes) => [...viejasImagenes, fileInputRef.current.files]);
+        setGuardaImagenes((viejasImagenes) => [...viejasImagenes, ...fileInputRef.current.files]);
 
         // Limitante de imagenes
         setCuentaImagenes((conteo) => conteo + archivosSeleccionados.length);

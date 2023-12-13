@@ -22,6 +22,7 @@ export function App() {
   
   const [bandejaVisible, setBandejaVisible] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
+  const [mensajeSeleccionado, setMensajeSeleccionado] = useState(null);
   
   const deslogeado = () => {
     window.location.reload();
@@ -200,7 +201,7 @@ export function App() {
         {bandejaVisible && <div className='bandejaEntrada' ref={mensajeRef}>
 
           {listaCorreo.map((mensaje) => (
-            fase === 1 && <div className='contenedorMensaje' key={mensaje.id} onClick={() => {setFase(2)}}>
+            fase === 1 && <div className='contenedorMensaje' key={mensaje.id} onClick={() => {setFase(2); setMensajeSeleccionado(mensaje)}}>
               <div className='detalleMensaje'>
                 <h1 className='nombreRemitente'>{mensaje.nombreremi}</h1>
                 <p className='mensajeR'>{mensaje.mensaje}</p>  
@@ -215,25 +216,21 @@ export function App() {
                 src={require('./multimedia/regresar.png')}
                 alt='regresar'
                 className='imagenRegresar'
-                onClick={() => {setFase(1)}} />
+                onClick={() => {setFase(1); setMensajeSeleccionado(null)}} />
                 
-              <p className='fotoRemitente'>image</p>
-              <h1 className='nombreRemitente'>Remitente</h1>
+              <h1 className='nombreRemitente'>{mensajeSeleccionado.nombreremi}</h1>
             </div>
 
             <div className='Todosmensajes'>
 
-              <div className='elMensaje'>Estos son solo algunos ejemplos. Puedes encontrar varias 
-                herramientas en línea y comandos que generan automáticamente texto de "Lorem Ipsum" con 
-                diferentes opciones de personalización. Ajusta según tus necesidades y preferencias.
-              </div>
-
-              {listaMensaje.map((lstring, linumber) => 
-                <div className='elMensaje' key={`li_${linumber}`}>
+              <div className='elMensaje'>{mensajeSeleccionado.mensaje}</div>
+              {listaMensaje.map((lstring) => 
+                <div className='elMensaje' key={mensajeSeleccionado.destinatario}>
                   {lstring}
-                </div>)}
+              </div>)}
               
             </div>
+
             <form className='contenedorEnvio' onSubmit={(e) => {e.preventDefault()}}>
               <textarea
                 className='inputMensaje'

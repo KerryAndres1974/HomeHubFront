@@ -15,6 +15,7 @@ function Detallesinmueble() {
     const [telefono, setTelefono] = useState({campo: '', valido: null});
     const [terminos, cambiarTerminos] = useState(false);
     const [formularioValido, setFormularioValido] = useState(null);
+    const [mostrarInfo, setMostrarInfo] = useState(false);
 
     // Expresiones para formularios
     const expresiones = {
@@ -24,9 +25,12 @@ function Detallesinmueble() {
     };    
 
     // Muestra los datos del vendedor
-    const handleClick = () => {
-        console.log(propietario);
-        window.open(`https://wa.me/${propietario.phone}?text=${asesoria}`);
+    const openModal = () => {
+        setMostrarInfo(true);
+    }
+
+    const closeModal = () => {
+        setMostrarInfo(false);
     }
 
     // Obtiene el token
@@ -34,24 +38,24 @@ function Detallesinmueble() {
         // Aquí obtén tu token JWT de alguna manera (por ejemplo, desde localStorage)
         const token = localStorage.getItem('token');
 
-    if (token) {
-        try {
-            // Divide el token en sus partes: encabezado, carga útil y firma
-            const [, cargaUtilBase64, ] = token.split('.');
+        if (token) {
+            try {
+                // Divide el token en sus partes: encabezado, carga útil y firma
+                const [, cargaUtilBase64, ] = token.split('.');
 
-            // Decodifica la carga útil (segunda parte del token)
-            const cargaUtilDecodificada = atob(cargaUtilBase64);
+                // Decodifica la carga útil (segunda parte del token)
+                const cargaUtilDecodificada = atob(cargaUtilBase64);
 
-            // Convierte la carga útil decodificada a un objeto JavaScript
-            const usuario = JSON.parse(cargaUtilDecodificada);
+                // Convierte la carga útil decodificada a un objeto JavaScript
+                const usuario = JSON.parse(cargaUtilDecodificada);
 
-            // Puedes establecer el usuario en el estado
-            setUsuario(usuario);
-        } catch (error) {
-            console.error('Error al decodificar el token:', error);
+                // Puedes establecer el usuario en el estado
+                setUsuario(usuario);
+            } catch (error) {
+                console.error('Error al decodificar el token:', error);
+            }
         }
-    }
-}, []);
+    }, []);
 
     // Obtiene el proyecto y despues info del propietario
     useEffect(() => {
@@ -161,10 +165,26 @@ function Detallesinmueble() {
 
                 <div className="caracteristicas">
                     <h1 className='textoZonas'>Zonas Comunes
-                        <button className='btn-vendedor' onClick={handleClick}>Ver datos del vendedor</button>
+                        <button className='btn-vendedor' onClick={openModal}>Ver datos del vendedor</button>
+                        {mostrarInfo && (
+                            <div className="infoVendedor" onClick={closeModal}>
+                                <div className="info">
+                                    <h3>informacion del vendedor</h3>
+                                    <div className='infoDatos'>
+                                        <p>Nombre: {propietario.name}</p>
+                                        <p>Email: {propietario.email}</p>
+                                        <p>Años de experiencia: {propietario.añosexp}</p>
+                                        <p>Telefono: {propietario.phone}</p>
+                                        <p>Proyectos Realizados: {propietario.proyectosrea}</p>
+                                        <p>Descripcion de su empresa: {propietario.descripcionemp}</p>
+                                        </div>
+                                    <button onClick={closeModal}>Cerrar</button>
+                                </div>
+                            </div>
+                        )}
                     </h1>
-                    <div className='zonasComunes'>
-                        
+
+                    <div className='zonasComunes'>    
                         <div>
                             <li>Ciudad ordenada</li>
                             <li>Acueducto</li>
@@ -190,6 +210,7 @@ function Detallesinmueble() {
                 <div className='galeria'>
                     <h1 className='tituloGaleria'>Galería</h1>
                     <h2>Haz click para ver la imagen completa</h2>
+                    <a href={proyecto.imagen}><img src={proyecto.imagen} className="imagenInmueble" alt=""/></a>
                 </div>
 
                 <form className='datosInteresado' onSubmit={enviarDatos}>
