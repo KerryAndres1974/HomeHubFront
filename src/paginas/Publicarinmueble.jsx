@@ -24,7 +24,7 @@ function Mispublicaiones() {
   const expresiones = {
     precio: /^\d{1,3}(,\d{3})/, //precios monetarios
     direccion: /^[a-zA-ZÀ-ÿ0-9\s#-]{1,100}$/, //letras, numeros, # y -
-    credenciales: /^[a-zA-ZÀ-ÿ\s]{1,40}$/, // letras mayus y minus
+    credenciales: /^[a-zA-ZÀ-ÿ\s,.]{1,100}$/, // letras mayus y minus
   };
   
   // Obtiene el token
@@ -191,6 +191,7 @@ function Mispublicaiones() {
           <h1 className='textoPublicar'>Publica tu propiedad en Home Hub!</h1>
           <div className='contendedor-inputs'>
             <Inputs
+              id='i1'
               estado={nombre}
               cambiarEstado={setNombre}
               tipo='text'
@@ -200,6 +201,7 @@ function Mispublicaiones() {
               valido={nombre.valido}
             />
             <Inputs
+              id='i2'
               estado={direccion}
               cambiarEstado={setDireccion}
               tipo='text'
@@ -209,9 +211,8 @@ function Mispublicaiones() {
               valido={direccion.valido}
             />
 
-            <select className='formularioDinamico'
-             value={ciudad}
-             onChange={(e) => setCiudad(e.target.value)}>
+            <select className='formularioDinamico' value={ciudad}
+             onChange={(e) => setCiudad(e.target.value)} id='i3' title='Ciudad'>
               <option disabled >Ciudad</option>
               <option>Cali</option>
               <option>Buga</option>
@@ -219,24 +220,25 @@ function Mispublicaiones() {
               <option>Jamundí</option>
             </select>
           
-            <select className='formularioDinamico'
-             value={tipo}
-             onChange={(e) => setTipo(e.target.value)}>
+            <select className='formularioDinamico' value={tipo}
+             onChange={(e) => setTipo(e.target.value)} id='i4' title='Tipo'>
               <option disabled >Tipo</option>
               <option>Casa</option>
               <option>Apartamento</option>
             </select>
 
             <Inputs
+              id='i5'
               estado={descripcion}
               cambiarEstado={setDescripcion}
               tipo='text'
               texto='Descripción'
               error='Campo invalido'
-              expresionRegular={expresiones.direccion}
+              expresionRegular={expresiones.credenciales}
               valido={descripcion.valido}
             />
             <Inputs
+              id='i6'
               estado={precio}
               cambiarEstado={setPrecio}
               tipo='text'
@@ -248,6 +250,7 @@ function Mispublicaiones() {
           </div>
           
           <input
+            id='i7'
             type='file'
             accept='image/*'
             onChange={handleFileChange}

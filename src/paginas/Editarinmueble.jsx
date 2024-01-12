@@ -109,7 +109,7 @@ export function Editarproyecto() {
 
             if(result.isConfirmed) {
                 fetch(`http://localhost:8000/borrar-proyecto/${idProyecto}`, {
-                    method: 'DELETE',
+                    method: 'PUT',
                 })
                 .then(response => {
                     if (!response.ok) {
@@ -166,6 +166,7 @@ export function Editarproyecto() {
                     <h2 className='tituloEditar'>Editar tu Inmueble ID: {idProyecto}</h2>
                     <div className='contenedor-inputs'>
                         <Inputs
+                            id='i1'
                             estado={nombre}
                             cambiarEstado={setNombre}
                             tipo='text'
@@ -175,6 +176,7 @@ export function Editarproyecto() {
                             valido={nombre.valido}
                         />
                         <Inputs
+                            id='i2'
                             estado={direccion}
                             cambiarEstado={setDireccion}
                             tipo='text'
@@ -184,9 +186,8 @@ export function Editarproyecto() {
                             valido={direccion.valido}
                         />
 
-                        <select className='formularioDinamico'
-                        value={ciudad}
-                        onChange={(e) => setCiudad(e.target.value)}>
+                        <select className='formularioDinamico' value={ciudad}
+                        onChange={(e) => setCiudad(e.target.value)} id='i3' title='Ciudad'>
                             <option disabled >Ciudad</option>
                             <option>Cali</option>
                             <option>Buga</option>
@@ -194,15 +195,15 @@ export function Editarproyecto() {
                             <option>Jamundí</option>
                         </select>
                     
-                        <select className='formularioDinamico'
-                        value={tipo}
-                        onChange={(e) => setTipo(e.target.value)}>
+                        <select className='formularioDinamico' value={tipo}
+                        onChange={(e) => setTipo(e.target.value)} id='i4' title='Tipo'>
                             <option disabled >Tipo</option>
                             <option>Casa</option>
                             <option>Apartamento</option>
                         </select>
 
                         <Inputs
+                            id='i5'
                             estado={descripcion}
                             cambiarEstado={setDescripcion}
                             tipo='text'
@@ -212,6 +213,7 @@ export function Editarproyecto() {
                             valido={descripcion.valido}
                         />
                         <Inputs
+                            id='i6'
                             estado={precio}
                             cambiarEstado={setPrecio}
                             tipo='text'

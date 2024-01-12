@@ -5,12 +5,12 @@ import '../hojasEstilos/Registro.css';
 import { useState } from 'react';
 
 function Registro() {      
-    const [usuario, cambiarUsuario] = useState({campo: '', valido: null});
     const [nombre, cambiarNombre] = useState({campo: '', valido: null});
+    const [correo, cambiarCorreo] = useState({campo: '', valido: null});
+    const [usuario, cambiarUsuario] = useState({campo: '', valido: null});
+    const [telefono, cambiarTelefono] = useState({campo: '', valido: null});
     const [contraseña, cambiarContraseña] = useState({campo: '', valido: null});
     const [contraseña2, cambiarContraseña2] = useState({campo: '', valido: null});
-    const [correo, cambiarCorreo] = useState({campo: '', valido: null});
-    const [telefono, cambiarTelefono] = useState({campo: '', valido: null});
     const [terminos, cambiarTerminos] = useState(false);
     const [variable, cambiarVariable] = useState(null);
     const [formularioValido, setFormularioValido] = useState(null);
@@ -93,6 +93,7 @@ function Registro() {
                 <h1 className='titulo-registro'>Registrate</h1>
                 <div className='contenedor-inputs'>
                     <Inputs
+                        id='i1'
                         estado={usuario}
                         cambiarEstado={cambiarUsuario}
                         tipo='text'
@@ -102,6 +103,7 @@ function Registro() {
                         valido={usuario.valido}
                     />
                     <Inputs
+                        id='i2'
                         tipo='text'
                         texto='Nombre'
                         estado={nombre}
@@ -111,8 +113,10 @@ function Registro() {
                         valido={nombre.valido}
                     />
                     <Inputs
+                        id='i3'
                         tipo='password'
                         texto='Contraseña'
+                        autocom='new-password'
                         estado={contraseña}
                         error='la contraseña debe ser de 4 a 12 digitos'
                         expresionRegular={expresiones.contraseña}
@@ -120,8 +124,10 @@ function Registro() {
                         valido={contraseña.valido}
                     />
                     <Inputs
+                        id='i4'
                         tipo='password'
                         texto='Confirmar contraseña'
+                        autocom='new-password'
                         estado={contraseña2}
                         error='Ambas contraseñas deben ser iguales'
                         funcion={validarContraseña}
@@ -129,6 +135,7 @@ function Registro() {
                         valido={contraseña2.valido}
                     />
                     <Inputs
+                        id='i5'
                         tipo='email'
                         texto='Correo electronico'
                         estado={correo}
@@ -138,6 +145,7 @@ function Registro() {
                         valido={correo.valido}
                     />
                     <Inputs
+                        id='i6'
                         tipo='tel'
                         texto='Telefono'
                         estado={telefono}
@@ -149,7 +157,8 @@ function Registro() {
                 </div>
                 
                 <label className='terminos'>
-                    <input type='checkbox'
+                    <input id='i7'
+                        type='checkbox'
                         checked={terminos}
                         onChange={(e) => {cambiarTerminos(e.target.checked)}}/>
                     Acepto los Terminos y Condiciones
@@ -162,7 +171,9 @@ function Registro() {
                 </div>}
 
                 <div className='contenedor-final'>
-                    <li className='pregunta-login'>Ya tienes cuenta?</li>
+                    <ul>
+                        <li className='pregunta-login'>Ya tienes cuenta?</li>
+                    </ul>
                     <Link to="/Ingreso" className='pestaña' >Iniciar Sesión</Link>
                 </div>
 

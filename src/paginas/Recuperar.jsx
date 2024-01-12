@@ -23,7 +23,7 @@ function Recuperar() {
     const auth = useAuth();
 
     if(auth.Estalogeado){
-        return <Navigate to='/Miperfil' />
+        return <Navigate to='/' />
     }
 
     const expresiones = { //letras, numeros, guion, guion bajo, @ y punto

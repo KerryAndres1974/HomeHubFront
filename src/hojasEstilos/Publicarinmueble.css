@@ -75,8 +75,10 @@
 
         & .contendedor-inputs {
             display: grid;
+            place-items: center;
+            height: 300px;
             grid-template-columns: 1fr 1fr;
-            column-gap: 5px;
+            column-gap: 25px;
 
             & .formularioDinamico {
                 padding: 8px;
@@ -87,8 +89,6 @@
                 border-radius: 8px;
                 width: 350px;
                 min-height: 48px;
-                margin-top: 20px;
-                margin-left: 23px;
                 transition: all 0.3s ease;
                 &:focus {
                     border: 2px solid blue;

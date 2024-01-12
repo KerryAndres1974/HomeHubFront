@@ -173,7 +173,7 @@ function Detallesinmueble() {
                                     <div className='infoDatos'>
                                         <p>Nombre: {propietario.name}</p>
                                         <p>Email: {propietario.email}</p>
-                                        <p>Años de experiencia: {propietario.añosexp}</p>
+                                        <p>Años de experiencia: {propietario.aniosexp}</p>
                                         <p>Telefono: {propietario.phone}</p>
                                         <p>Proyectos Realizados: {propietario.proyectosrea}</p>
                                         <p>Descripcion de su empresa: {propietario.descripcionemp}</p>

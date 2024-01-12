@@ -6,7 +6,6 @@
     align-items: center;
     justify-content: space-between;
     background: #f5f6f7;
-    border: 1px solid #2c3e50;
     border-radius: 20px;
 
     & .contorno {

@@ -9,20 +9,26 @@ export function App() {
   const auth = useAuth();
   const goTo = useNavigate();
   const logeado = () => !!auth.login();
+  
+  const [fase, setFase] = useState(1);
+  const [tipo, setTipo] = useState('Tipo');
+  const [mensaje, setMensaje] = useState('');
   const [usuario, setUsuario] = useState(null);
   const [proyecto, setProyecto] = useState([]);
+  const [ciudad, setCiudad] = useState('Ciudad');
+  const [nombre, setNombre] = useState('');
   const [scrolled, setScrolled] = useState(false);
-  const [fase, setFase] = useState(1);
-  const [mensaje, setMensaje] = useState('');
-  const [listaMensaje, setListaMensaje] = useState([]);
   const [listaCorreo, setListaCorreo] = useState([]);
+  const [listaMensaje, setListaMensaje] = useState([]);
   
+  const contendorMensaje = useRef(null);
   const mensajeRef = useRef(null);
+  const contendorMenu = useRef(null);
   const menuRef = useRef(null);
   
+  const [mensajeSeleccionado, setMensajeSeleccionado] = useState(null);
   const [bandejaVisible, setBandejaVisible] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
-  const [mensajeSeleccionado, setMensajeSeleccionado] = useState(null);
   
   const deslogeado = () => {
     window.location.reload();
@@ -44,15 +50,6 @@ export function App() {
       targetElement.scrollIntoView({
         behavior: 'smooth',
       });
-    }
-  };
-  
-  const editarProyecto = (Propietario, Usuario, idProyecto) => {
-    
-    if(Propietario === Usuario){
-      goTo(`/Mis-publicaciones/Editar-inmueble/${idProyecto}`);
-    } else {
-      goTo(`/Detalles-inmueble/${idProyecto}`);
     }
   };
   
@@ -80,8 +77,8 @@ export function App() {
   }
 
   useEffect(() => {
+    //------------------------------TOKEN-------------------------------------//
     const token = localStorage.getItem('token');
-
     if (token) {
       try {
         // Divide el token en sus partes: encabezado, carga útil y firma
@@ -99,8 +96,9 @@ export function App() {
         console.error('Error al decodificar el token:', error);
       }
     }
+    //------------------------------TOKEN-------------------------------------//
 
-    // Ajustes del encabezado
+    //-------------------------AJUSTE DE SCROLL-------------------------------//
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
       if (scrollPosition > 550) { // Ajusta este valor según tus necesidades
@@ -110,48 +108,67 @@ export function App() {
       }
     };
     window.addEventListener('scroll', handleScroll);
+    //-------------------------AJUSTE DE SCROLL-------------------------------//
 
-    // Abre y cierra la bandeja de mensajes y opciones
-    const handleClickOutside1 = (e) => {
-      if(menuRef.current && !menuRef.current.contains(e.target)) {
+    //-------------------------MENU DESPLEGABLE-------------------------------//
+    const handleClickOutside = (e) => {
+      if(contendorMenu.current && menuRef.current && 
+        !contendorMenu.current.contains(e.target) && 
+        !menuRef.current.contains(e.target)) {
         setMenuVisible(false);
       }
-    };
-
-    const handleClickOutside2 = (e) => {
-      if(mensajeRef.current && !mensajeRef.current.contains(e.target)) {
+      if(contendorMensaje.current && mensajeRef.current && 
+        !contendorMensaje.current.contains(e.target) && 
+        !mensajeRef.current.contains(e.target)) {
         setBandejaVisible(false);
       }
     };
-
-    document.addEventListener('mousedown', handleClickOutside1);
-    document.addEventListener('mousedown', handleClickOutside2);
+    document.addEventListener('mousedown', handleClickOutside);
+    //-------------------------MENU DESPLEGABLE-------------------------------//
 
     return(() => {
-      document.addEventListener('mousedown', handleClickOutside1);
-      document.addEventListener('mousedown', handleClickOutside2);
+      document.removeEventListener('mousedown', handleClickOutside);
       window.removeEventListener('scroll', handleScroll);
     });
   }, []);
   
   useEffect(() => {
+
     const cargarProyectos = async () => {
       try {
-        const response = await fetch('http://localhost:8000/all-proyectos-activos');
+        if(ciudad === 'Ciudad' && tipo === 'Tipo' && nombre === '') {
+          const response = await fetch('http://localhost:8000/all-proyectos-activos');
 
-            if(response.ok){
-                const data = await response.json();
-                setProyecto(data);
-            } else {
-                console.error('Error al obtener los proyectos:', response.statusText);
-            }
+          if(response.ok){
+              const data = await response.json();
+              setProyecto(data);
+          } else {
+              console.error('Error al obtener los proyectos:', response.statusText);
+          }
+
+        } else if (ciudad !== 'Ciudad' || tipo !== 'Tipo' || nombre !== '') {
+          const response = await fetch(`http://localhost:8000/buscar-proyectos`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ nombre: nombre, ciudad: ciudad, tipo: tipo })
+          });
+
+          if(response.ok){
+            const data = await response.json();
+            setProyecto(data);
+          } else {
+            console.error('Error al obtener los proyectos:', response.statusText);
+          }
+        }
         } catch (error) {
-            console.error('Error al realizar la petición:', error);
+          console.error('Error al realizar la petición:', error);
         }
     };
     cargarProyectos();
 
-  }, []);
+  }, [nombre, ciudad, tipo]);
 
   useEffect(() => {}, [proyecto]);
   
@@ -177,28 +194,27 @@ export function App() {
         
         {logeado() === true && <div className='contenedorIconos'>
           <img 
+            ref={contendorMensaje}
             src={require('./multimedia/message.png')}
             alt='mensaje'
             className='imagenMensaje'
-            onClick={toggleMessage}
-          />
-          <img
+            onClick={toggleMessage} />
+          <img  
+            ref={contendorMenu}
             src={require('./multimedia/menu.png')}
             alt='menu'
             className='imagenMenu'
-            onClick={toggleMenu}
-          />
+            onClick={toggleMenu} />
           </div>}
 
-        {menuVisible && <ul className='menuVertical' ref={menuRef}>
-          <Link to="/Editar-perfil" className='pestaña' >Editar Perfil</Link>
-          <Link to="/Completar-perfil" className='pestaña' >Completar Perfil</Link>
+        {menuVisible === true && <ul className='menuVertical' ref={menuRef}>
+          <Link to="/Gestionar-perfil" className='pestaña' >Gestionar Perfil</Link>
           <Link to="/Mis-publicaciones" className='pestaña' >Mis Publicaciones</Link>
           <Link to="/Publicar-inmueble" className='pestaña' >Publicar Inmueble</Link>
           <Link to="/" onClick={deslogeado} className='pestaña' >Salir</Link>
         </ul>}
 
-        {bandejaVisible && <div className='bandejaEntrada' ref={mensajeRef}>
+        {bandejaVisible === true && <div className='bandejaEntrada' ref={mensajeRef}>
 
           {listaCorreo.map((mensaje) => (
             fase === 1 && <div className='contenedorMensaje' key={mensaje.id} onClick={() => {setFase(2); setMensajeSeleccionado(mensaje)}}>
@@ -211,24 +227,19 @@ export function App() {
 
           {fase === 2 && <div className='mensajeria'>
 
-            <div className='accionRemitente'>
-              <img
-                src={require('./multimedia/regresar.png')}
-                alt='regresar'
-                className='imagenRegresar'
-                onClick={() => {setFase(1); setMensajeSeleccionado(null)}} />
+            <div className='remitente'>
+              <button className='botonRegresar' onClick={() => {setFase(1); setMensajeSeleccionado(null)}}>&lang;</button>
                 
               <h1 className='nombreRemitente'>{mensajeSeleccionado.nombreremi}</h1>
             </div>
 
             <div className='Todosmensajes'>
-
               <div className='elMensaje'>{mensajeSeleccionado.mensaje}</div>
+              
               {listaMensaje.map((lstring) => 
                 <div className='elMensaje' key={mensajeSeleccionado.destinatario}>
                   {lstring}
               </div>)}
-              
             </div>
 
             <form className='contenedorEnvio' onSubmit={(e) => {e.preventDefault()}}>
@@ -245,6 +256,7 @@ export function App() {
             </form>
 
           </div>}
+          
         </div>}
       </header>
 
@@ -256,27 +268,31 @@ export function App() {
             <h1 className='tituloBienvenida'>{usuario ? `¡Bienvenido a Home Hub ${usuario.username}!` : 
             '¡Bienvenido a Home Hub!'}</h1>
             <p className='textoBienvenida'>Hacemos realidad tus metas inmobiliarias con profesionalismo 
-              y dedicación.<br/>¡Encuentra propiedades que se adaptan a tu estilo de vida!
+              y dedicación. ¡Encuentra propiedades que se adaptan a tu estilo de vida!
             </p>
           </div>
 
-          {/*<div className='btn-botones'>
-            <input type='text' placeholder='Buscar x Nombre'/>
+          <div className='contenedor-botones'>
+            <input type='text' placeholder='Buscar x Nombre' className='input-buscar' id='s1'
+              value={nombre} onChange={(e) => {setNombre(e.target.value)}} />
 
-            <select value='Ciudad'>
-              <option disabled >Ciudad</option>
+            <select value={ciudad} title='Ciudad' className='boton' href='#seccion2' id='s2'
+              onChange={(e) => {setCiudad(e.target.value); handleClick(e)}}>
+              <option>Ciudad</option>
               <option>Cali</option>
               <option>Buga</option>
               <option>Tuluá</option>
               <option>Jamundí</option>
             </select>
 
-            <select value='Tipo'>
-              <option disabled >Tipo</option>
+            <select value={tipo} title='Tipo' className='boton' href='#seccion2' id='s3'
+              onChange={(e) => {setTipo(e.target.value); handleClick(e)}}>
+              <option>Tipo</option>
               <option>Casa</option>
               <option>Apartamento</option>
             </select>
-          </div>*/}
+          </div>
+
         </section>
         
       </section>
@@ -284,15 +300,17 @@ export function App() {
       <section className='SeccionPropiedades' id='seccion2'>
       
         <section className='contenedorPropiedades'>
-          <p className='lineaH' style={{margin: '20px 0 0 0'}}></p>
-          <h1 className='tituloProyectos'>Proyectos para tu Familia</h1>
+          <p className='lineaH' style={{margin: '60px 0 0 0'}}></p>
+          <h1 className='tituloProyectos'>Proyectos que Buscabas para tu Familia</h1>
           <p className='lineaH'></p>
           
           <div className='contenedorFamiliaProyectos'>
             {proyecto.map((proyecto) => (
               <div className='contenedorXProyecto' onClick={() => 
-              {usuario ? editarProyecto(proyecto.idusuario, usuario.id, proyecto.id) : 
+                {usuario ? (proyecto.idusuario === usuario.id ? goTo(`/Mis-publicaciones/Editar-inmueble/${proyecto.id}`) : 
+                goTo(`/Detalles-inmueble/${proyecto.id}`)) : 
                 goTo(`/Detalles-inmueble/${proyecto.id}`)}} key={proyecto.id}>
+
                 <Proyecto
                     nombre={proyecto.nombre}
                     tipo={proyecto.tipo}
@@ -306,26 +324,30 @@ export function App() {
               </div>
             ))}
           </div>
+
+          {proyecto.length > 9 && 
+            <div className='contenedorXProyecto'>Hoolaaa</div>}
+
         </section>
 
       </section>
 
       <section className='SeccionNosotros' id='seccion3'>
         
-        <p className='contenidoParrafo'><h1 className='tituloParrafo' style={{margin: '0 0 5px 0'}}>Misión.</h1>
+        <div className='contenidoParrafo'><h1 className='tituloParrafo' style={{margin: '0 0 5px 0'}}>Misión.</h1>
         Nuestra Misión es facilitar el acceso a hogares que reflejen 
         los sueños y necesidades únicas de cada individuo. En Home Hub, nos enorgullece ser agentes 
         de cambio en la vida de las personas, guiándolas hacia propiedades que no solo satisfacen 
-        sus necesidades habitacionales, sino que también dan vida a sus aspiraciones.</p>
+        sus necesidades habitacionales, sino que también dan vida a sus aspiraciones.</div>
 
         <h1 className='tituloEmpresa'><br/>Home<br/>Hub</h1>
       
-        <p className='contenidoParrafo'><h1 className='tituloParrafo' style={{margin: '0 0 5px 0'}}>Visión.</h1>
+        <div className='contenidoParrafo'><h1 className='tituloParrafo' style={{margin: '0 0 5px 0'}}>Visión.</h1>
         Nuestra Visión es trascender las expectativas comunes de la 
         industria inmobiliaria. Nos visualizamos como líderes innovadores que redefinen la experiencia 
         de encontrar el hogar perfecto. Nuestra Visión va más allá de simples transacciones; aspiramos 
         a ser facilitadores de sueños, proporcionando soluciones habitacionales que marcan la 
-        diferencia en la vida de las personas.</p>
+        diferencia en la vida de las personas.</div>
         
       </section>
 

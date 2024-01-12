@@ -1,14 +1,6 @@
-/* Inputs.css */
-
-.formulario {
-    display: flex;
-    flex-wrap: wrap;
-    align-content: flex-start;
-}
-
 .texto-input {
     font-size: 0.8rem;
-    margin: 10px 0 0 30px;
+    margin-left: 5px;
     color: #001f3f;
 }
 
@@ -25,7 +17,6 @@
     font-size: 18px;
     outline: none;
     width: 320px;
-    margin: auto;
 
     &:focus{
         border: 2px solid blue;
@@ -38,7 +29,7 @@
 
 .leyendaError {
     font-size: 0.7rem;
-    margin-left: 30px;
+    margin-left: 5px;
     display: none;
     color: red;
 }

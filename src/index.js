@@ -1,8 +1,7 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Mispublicaciones from './paginas/Mispublicaciones.jsx';
-import Completarperfil from './paginas/Completarperfil.jsx';
+import Gestionarperfil from './paginas/Gestionarperfil.jsx';
 import { AuthProvider } from './Auth/AuthProvider.jsx';
-import Editarperfil from './paginas/Editarperfil.jsx';
 import RutaProtegida from './RutasProtegidas.js';
 import Recuperar from './paginas/Recuperar.jsx';
 import Registro from './paginas/Registro.jsx';
@@ -15,10 +14,16 @@ import React from 'react';
 import App from './App';
 import './index.css';
 
+import Ejemplos from './paginas/Ejemplos.jsx';
+
 const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
+  },
+  {
+    path: '/ejemplos',
+    element: <Ejemplos />,
   },
   {
     path: '/Ingreso',
@@ -41,12 +46,8 @@ const router = createBrowserRouter([
     element: <RutaProtegida />,
     children: [
       {
-        path: '/Editar-perfil',
-        element: <Editarperfil />,
-      },
-      {
-        path: '/Completar-perfil',
-        element: <Completarperfil />,
+        path: '/Gestionar-perfil',
+        element: <Gestionarperfil />,
       },
       {
         path: '/Publicar-inmueble',

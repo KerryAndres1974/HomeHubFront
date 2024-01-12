@@ -1,7 +1,7 @@
 import '../hojasEstilos/Inputs.css';
 import { useState } from 'react';
 
-const Inputs = ({ tipo, texto, error, expresionRegular, cambiarEstado, estado, funcion }) => {
+const Inputs = ({ tipo, texto, error, expresionRegular, cambiarEstado, estado, funcion, place, id, autocom }) => {
     const [valido, setValido] = useState(null);
 
     const validarCampo = () => {
@@ -20,10 +20,13 @@ const Inputs = ({ tipo, texto, error, expresionRegular, cambiarEstado, estado, f
     }
 
     return (
-        <div className={`formulario ${valido === false ? 'error' : 'formulario'}`}>
+        <div className='formulario'>
             <p className={`texto-input ${valido === false ? 'error' : 'texto-input'}`}>{texto}</p>
             <input
+                id={id}
+                placeholder={place}
                 type={tipo}
+                autoComplete={autocom}
                 value={estado.campo}
                 onChange={onChange}
                 onBlur={() => validarCampo()}
